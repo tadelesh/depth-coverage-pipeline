@@ -23,8 +23,8 @@ stages:
     - script: |
         echo $pwd
         az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
-        az storage blob upload -c dcblob -f azure-pipelines.yml -n $BLOBName --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
-        az storage blob download -c dcblob -f azure-pipelines-2.yml -n $BLOBName --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+        az storage blob upload -c dcblob -f azure-pipelines.yml -n $(BLOBName) --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+        az storage blob download -c dcblob -f azure-pipelines-2.yml -n $(BLOBName) --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
         ls -l
     - script: echo Hello, world!
       displayName: 'Run a one-line script'
