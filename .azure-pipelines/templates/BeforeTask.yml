@@ -1,0 +1,8 @@
+steps:
+- script: |
+    echo $pwd
+    az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
+    az storage blob download -c dcblob -f azure-pipelines.yml -n $(resource)-generated.tar.gz --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+    tar -xzvf $(resource)-generated.tar.gz
+    ls -l $(resource)
+  displayName: 'Before $(TASK_KEY)'
