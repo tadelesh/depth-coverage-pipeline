@@ -26,11 +26,5 @@ stages:
         az storage blob upload -c dcblob -f azure-pipelines.yml -n $BLOBName --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
         az storage blob download -c dcblob -f azure-pipelines-2.yml -n $BLOBName --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
         ls -l
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    - script: echo Hello, world!
+      displayName: 'Run a one-line script'
