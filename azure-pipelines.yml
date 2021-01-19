@@ -31,9 +31,9 @@ stages:
         ls -l
     - script: echo Hello, world!
       displayName: 'Run a one-line script'
-    - template: templates/AfterTask.yml
+    - template: .azure-pipelines/templates/AfterTask.yml
 - stage: Build
   jobs:
   - job: build
     steps:
-    - template: templates/BeforeTask.yml
+    - template: .azure-pipelines/templates/BeforeTask.yml
