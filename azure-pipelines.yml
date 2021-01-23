@@ -29,28 +29,28 @@ stages:
     - script: |
         depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
         rp=`jq .RPName $(ResourceMapFile)`
-        echo $(rp)
+        echo $rp
         echo '##vso[task.setvariable variable=ResourceProvider]`jq .RPName $(ResourceMapFile)`'
         echo $(ResourceProvider)
-- stage: GenerateCode
-  jobs:
-  - job: Generate
-    variables:
-    - name: TASK_KEY
-      value: GenerateCode
-    steps:
-    - script: |
-        echo $pwd
-        echo $(PULLNUMBER)
-        # az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
-        # az storage blob upload -c dcblob -f azure-pipelines.yml -n $(BLOBName) --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
-        # az storage blob download -c dcblob -f azure-pipelines-2.yml -n $(BLOBName) --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
-        ls -l
-    - script: echo Hello, world!
-      displayName: 'Run a one-line script'
-    - template: .azure-pipelines/templates/AfterTask.yml
-- stage: Build
-  jobs:
-  - job: build
-    steps:
-    - template: .azure-pipelines/templates/BeforeTask.yml
+# - stage: GenerateCode
+#   jobs:
+#   - job: Generate
+#     variables:
+#     - name: TASK_KEY
+#       value: GenerateCode
+#     steps:
+#     - script: |
+#         echo $pwd
+#         echo $(PULLNUMBER)
+#         # az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
+#         # az storage blob upload -c dcblob -f azure-pipelines.yml -n $(BLOBName) --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+#         # az storage blob download -c dcblob -f azure-pipelines-2.yml -n $(BLOBName) --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+#         ls -l
+#     - script: echo Hello, world!
+#       displayName: 'Run a one-line script'
+#     - template: .azure-pipelines/templates/AfterTask.yml
+# - stage: Build
+#   jobs:
+#   - job: build
+#     steps:
+#     - template: .azure-pipelines/templates/BeforeTask.yml
