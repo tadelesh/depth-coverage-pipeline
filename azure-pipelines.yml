@@ -43,7 +43,7 @@ stages:
     - pwsh: |
         $jsonfile=$env:RESOURCE_MAP_FILE
         echo $jsonfile
-        $data = Get-content ToGenerate.json | ConvertFrom-Json
+        $data = Get-content $jsonfile | ConvertFrom-Json
         echo $data
         $name=$data.RPName
         Write-Host "##vso[task.setvariable variable=ResourceProvider]$name"
