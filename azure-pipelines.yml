@@ -24,7 +24,7 @@ stages:
   - job: RetrieveResourceConfig
     steps:
     - script: |
-        sudo npm install -g depth-coverage --unsafe-perm=true --allow-root
+        sudo npm install -g az-depth-coverage --unsafe-perm=true --allow-root
         sudo apt-get install jq -y
     - script: |
         depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
