@@ -1,0 +1,75 @@
+steps:
+- script: echo 'setup go env'
+  displayName: "setup Go environment"
+- script: |
+    git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
+    git clone https://github.com/Azure/azure-rest-api-specs.git
+    git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
+  displayName: "pull repo"
+- script: |
+    autorest --go --use="@microsoft.azure/autorest.go@2.1.165" --verbose --multiapi --use-onever --version=previous --go-sdk-folder=/go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/Azure/azure-sdk-for-go $(README_FILE)
+    if [ "$?" != "0" ]; then
+      echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $RP]: Generate go sdk failed"
+      exit 1
+    fi
+  displayName: "build go-sdk"
+- script: |
+    cd /go/src/github.com/terraform-providers/terraform-provider-azurerm
+    echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go."
+    CLIENT_IMPORT=`cat azurerm/internal/services/${RP}/trenton-configuration/configuration_client | sed -n 1p`
+    CLIENT_STRUCT=`cat azurerm/internal/services/${RP}/trenton-configuration/configuration_client | sed -n 2p`
+    CLIENT_NEW=`cat azurerm/internal/services/${RP}/trenton-configuration/configuration_client | sed -n 3p`
+    CLIENT_IMPORT_ORI="web \"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\/client\""
+    CLIENT_STRUCT_ORI="*web.Client"
+    CLIENT_NEW_ORI="client.Web = web.NewClient(o)"
+    
+    SERVICE_IMPORT=`cat azurerm/internal/services/${RP}/trenton-configuration/configuration_services | sed -n 1p`
+    SERVICE_REGISTRATION=`cat azurerm/internal/services/${RP}/trenton-configuration/configuration_services | sed -n 2p`
+    SERVICE_IMPORT_ORI="\"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\""
+    SERVICE_REGISTRATION_ORI="web.Registration{},"
+
+    if cat azurerm/internal/clients/client.go | grep -q "/${RP}/"; then
+      PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/${RP}/" | awk '{print $1}'`
+      sed -i "s|^.*${PACKAGE_NAME_ORI} \"github.*$|${CLIENT_IMPORT}|" azurerm/internal/clients/client.go
+      sed -i "s/^.*\*${PACKAGE_NAME_ORI}\.Client.*$/${CLIENT_STRUCT}/" azurerm/internal/clients/client.go
+      sed -i "s/^.*${PACKAGE_NAME_ORI}\.NewClient(o).*$/${CLIENT_NEW}/" azurerm/internal/clients/client.go
+    else
+      sed -i "/$CLIENT_IMPORT_ORI/a $CLIENT_IMPORT" azurerm/internal/clients/client.go
+      sed -i "/$CLIENT_STRUCT_ORI/a $CLIENT_STRUCT" azurerm/internal/clients/client.go
+      sed -i "/$CLIENT_NEW_ORI/a $CLIENT_NEW" azurerm/internal/clients/client.go
+      sed -i "/$SERVICE_IMPORT_ORI/a $SERVICE_IMPORT" azurerm/internal/provider/services.go
+      sed -i "/$SERVICE_REGISTRATION_ORI/a $SERVICE_REGISTRATION" azurerm/internal/provider/services.go
+    fi
+    echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go successfully."
+  displayName: ""
+- script: |
+    # delete generated trenton configuration
+    rm -r /go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/${RP}/trenton-configuration
+    # move doc
+    mv /go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/${RP}/website/docs/d/* /go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/
+    mv /go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/${RP}/website/docs/r/* /go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/
+
+    echo -e "\e[32m[$(date -u)] LOG: [$OPERATION : $RP]: Format Test and Document"
+    # fmt tests
+    find /go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/${RP} | sort | while read f; do terrafmt fmt -f $f; done
+
+    # fmt document
+    find /go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/ | egrep "html.markdown" | sort | while read f; do terrafmt fmt -f $f; done
+    find /go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/r/ | egrep "html.markdown" | sort | while read f; do terrafmt fmt -f $f; done
+  displayName: "pre-build"
+- script: |
+    echo -e "\e[32m[$(date -u)] LOG: [$OPERATION : $RP]: Compile Generated code"
+    bash /compile.sh
+    if [ "$?" != "0" ]; then
+      echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $RP]: Compile Generated code failed"
+      exit 1
+    fi
+
+    #Run linter for generated code
+    echo -e "\e[32m[$(date -u)] LOG: [$OPERATION : $RP]: RUN TFLinter"
+    bash /tflinter.sh
+    if [ "$?" != "0" ]; then
+        echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $RP]: RUN TFLinter failed"
+        exit 1
+     fi 
+  displayName: "build"

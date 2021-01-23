@@ -13,5 +13,9 @@ steps:
   displayName: 'install autorest'
 - script: |
     echo $pwd
-    autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./ $(README_FILE_PATH)
+    autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./ $(README_FILE)
+    if [ "$?" != "0" ]; then
+      echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $RP]: Generate code failed"
+      exit 1
+    fi
   displayName: 'Generate TF'
