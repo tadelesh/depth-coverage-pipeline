@@ -37,12 +37,12 @@ stages:
         depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
         rp=`jq .RPName $(RESOURCE_MAP-FILE)`
         echo $rp
-        echo '##vso[task.setvariable variable=ResourceProvider]${rp}'
+        echo '##vso[task.setvariable variable=ResourceProvider;isOutput=true]${rp}'
     - pwsh: |
         $data = Get-content ToGenerate.json | ConvertFrom-Json
         echo $data
         echo $data.RPName
-        Write-Host "##vso[task.setvariable variable=ResourceProvider]$data.RPName"
+        Write-Host "##vso[task.setvariable variable=ResourceProvider;isOutput=true] this is $data.RPName"
       displayName: "Set variable"
     - script: echo $(ResourceProvider)
       displayName: "Get variable"
