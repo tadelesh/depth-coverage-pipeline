@@ -24,11 +24,15 @@ variables:
   value: ""
 - name: RESOURCE_MAP_FILE
   value: ToGenerate.json
+- name: README_FILE
+  value: ""
+- name: TARGET
+  value: TF
 
 stages:
 - stage: setup
   jobs:
-  - job: RetrieveResourceConfig
+  - job: config
     steps:
     - script: |
         sudo npm install -g az-depth-coverage --unsafe-perm=true --allow-root
@@ -46,29 +50,55 @@ stages:
         $data = Get-content $jsonfile | ConvertFrom-Json
         echo $data
         $name=$data.RPName
+        $readmefile=$data.readmeFile
         Write-Host "##vso[task.setvariable variable=ResourceProvider]$name"
+        Write-Host "##vso[task.setvariable variable=README_FILE]$readmefile"
       displayName: "Set variable"
     - script: echo $(ResourceProvider)
       displayName: "Get variable"
-# - stage: GenerateCode
-#   jobs:
-#   - job: Generate
-#     variables:
-#     - name: TASK_KEY
-#       value: GenerateCode
-#     steps:
-#     - script: |
-#         echo $pwd
-#         echo $(PULLNUMBER)
-#         # az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
-#         # az storage blob upload -c dcblob -f azure-pipelines.yml -n $(BLOBName) --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
-#         # az storage blob download -c dcblob -f azure-pipelines-2.yml -n $(BLOBName) --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
-#         ls -l
-#     - script: echo Hello, world!
-#       displayName: 'Run a one-line script'
-#     - template: .azure-pipelines/templates/AfterTask.yml
-# - stage: Build
-#   jobs:
-#   - job: build
-#     steps:
-#     - template: .azure-pipelines/templates/BeforeTask.yml
+- stage: GenerateCode
+  dependsOn: setup
+  condition: succeeded()
+  jobs:
+  - job: GenerateJob
+    variables:
+    - name: TASK_KEY
+      value: GenerateCode
+    steps:
+    - template: .azure-pipelines/templates/Generate$(TARGET).yml
+    - template: .azure-pipelines/templates/AfterTask.yml
+  - job: alert
+    dependsOn: GenerateJob
+    condition: failed()
+    steps:
+    - template: .azure-pipelines/templates/AlertTask.yml
+- stage: Build
+  dependsOn: GenerateCode
+  condition: succeeded()
+  jobs:
+  - job: build
+    steps:
+    - template: .azure-pipelines/templates/BeforeTask.yml
+- stage: MockTest
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: MockTest
+    steps:
+    - script: echo 'MockTest'
+    displayName: MockTest
+- stage: LiveTest
+  dependsOn: MockTest
+  condition: succeeded()
+  jobs:
+  - job: LiveTest
+    steps:
+    - script: echo 'LiveTest'
+    displayName: LiveTest
+- stage: Submit
+  dependsOn: LiveTest
+  condition: succeeded()
+  jobs:
+  - job: submit
+    steps:
+    - script: echo 'submit code to code repo'
