@@ -10,13 +10,20 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  PIPELINE_ORG: "Azure"
-  PIPELINE_REPO: "depth-coverage-pipeline"
-  PULL_NUMBER: $(System.PullRequest.PullRequestNumber)
-  ResourceProvider: "empty"
-  Resource: ""
-  ResourceMapJson: ""
-  ResourceMapFile: "ToGenerate.json"
+- name: PIPELINE_ORG
+  value: Azure
+- name: PIPELINE_REPO
+  value: depth-coverage-pipeline
+- name: PULL_NUMBER
+  value: $(System.PullRequest.PullRequestNumber)
+- name: ResourceProvider
+  value: empty
+- name: Resource
+  value: ""
+- name: ResourceMapJson
+  value: ""
+- name: ResourceMapFile
+  value: ToGenerate.json
 
 stages:
 - stage: setup
