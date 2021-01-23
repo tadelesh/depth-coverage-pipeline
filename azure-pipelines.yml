@@ -35,6 +35,7 @@ stages:
         sudo apt-get install jq -y
     - script: |
         depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
+    - pwsh: |
         rp=`jq .RPName $(ResourceMapFile)`
         echo $rp
         ##vso[task.setvariable variable=ResourceProvider]${rp}
