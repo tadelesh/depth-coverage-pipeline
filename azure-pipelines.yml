@@ -39,7 +39,7 @@ stages:
         echo $rp
         echo '##vso[task.setvariable variable=ResourceProvider]${rp}'
     - pwsh: |
-        $data = Get-content $ResourceMapFile| out-string | ConvertFrom-Json
+        $data = Get-content $env.ResourceMapFile | out-string | ConvertFrom-Json
         Write-Host "#`#vso[task.setvariable variable=ResourceProvider]$data.RPName"
       displayName: "Set variable"
     - script: echo $(ResourceProvider)
