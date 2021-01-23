@@ -22,7 +22,7 @@ variables:
   value: ""
 - name: ResourceMapJson
   value: ""
-- name: ResourceMapFile
+- name: RESOURCE_MAP-FILE
   value: ToGenerate.json
 
 stages:
@@ -35,11 +35,11 @@ stages:
         sudo apt-get install jq -y
     - script: |
         depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
-        rp=`jq .RPName $(ResourceMapFile)`
+        rp=`jq .RPName $(RESOURCE_MAP-FILE)`
         echo $rp
         echo '##vso[task.setvariable variable=ResourceProvider]${rp}'
     - pwsh: |
-        $data = Get-content $env:ResourceMapFile | ConvertFrom-Json
+        $data = Get-content $env:RESOURCE_MAP-FILE | ConvertFrom-Json
         Write-Host "#`#vso[task.setvariable variable=ResourceProvider]$data.RPName"
       displayName: "Set variable"
     - script: echo $(ResourceProvider)
