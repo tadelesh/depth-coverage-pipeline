@@ -10,7 +10,7 @@ steps:
     metadata-tool ./azure-rest-api-specs/$(README_FILE)
   displayName: 'Generate Trenton readme file'
 - script: |
-    sudo npm install -g autorest && npm install -g typescrip
+    sudo npm install -g autorest && sudo npm install -g typescript
   displayName: 'install autorest'
 - script: |
     echo $pwd
