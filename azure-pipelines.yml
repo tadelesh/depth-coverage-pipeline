@@ -71,6 +71,9 @@ stages:
     - name: TASK_KEY
       value: GenerateCode
     steps:
+    - script: |
+        echo $(ResourceProvider)
+        echo 'end'
     - template: .azure-pipelines/templates/Generate${{variables.TARGET}}.yml
     - template: .azure-pipelines/templates/AfterTask.yml
   - job: ConfigAlert
