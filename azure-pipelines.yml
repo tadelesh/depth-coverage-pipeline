@@ -94,7 +94,7 @@ stages:
     pool: server    
     timeoutInMinutes: 4320 # job times out in 3 days
     steps:
-    - script: |
+    - bash: |
         echo '##vso[task.setvariable variable=NotifyUsers]chunyu@microsoft.com'
         echo '##vso[task.setvariable variable=AlertInstruction]Failed to generate code. Please check the codgen tool.'
     - template: .azure-pipelines/templates/AlertTask.yml
