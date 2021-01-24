@@ -73,6 +73,16 @@ stages:
     steps:
     - template: .azure-pipelines/templates/Generate${{variables.TARGET}}.yml
     - template: .azure-pipelines/templates/AfterTask.yml
+  - job: ConfigAlert
+    dependsOn: GenerateJob
+    condition: failed()
+    displayName: "config alert"
+    steps:
+    - pwsh: |
+        $notify="chunyu@microsoft.com"
+        $instruction='Failed to generate $(TARGET) code. Please check the codgen tool.'
+        Write-Host "##vso[task.setvariable variable=NotifyUsers]$nofity"
+        Write-Host "##vso[task.setvariable variable=AlertInstruction]$instruction"
   - job: alert
     dependsOn: GenerateJob
     condition: failed()
@@ -80,11 +90,6 @@ stages:
     pool: server    
     timeoutInMinutes: 4320 # job times out in 3 days
     steps:
-    - pwsh: |
-        $notify="chunyu@microsoft.com"
-        $instruction='Failed to generate $(TARGET) code. Please check the codgen tool.'
-        Write-Host "##vso[task.setvariable variable=NotifyUsers]$nofity"
-        Write-Host "##vso[task.setvariable variable=AlertInstruction]$instruction"
     - template: .azure-pipelines/templates/AlertTask.yml
 - stage: Build
   dependsOn: GenerateCode
