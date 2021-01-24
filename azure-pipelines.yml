@@ -48,7 +48,7 @@ stages:
         depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
         # rp=`jq .RPName $(RESOURCE_MAP-FILE)`
         # echo $rp
-        # echo '##vso[task.setvariable variable=ResourceProvider]${rp}'
+        # echo '##vso[task.setvariable variable=ResourceProvider]$rp'
       displayName: 'Get resource config file'
     - pwsh: |
         $jsonfile=$env:RESOURCE_MAP_FILE
@@ -57,8 +57,8 @@ stages:
         echo $data
         $name=$data.RPName
         $readmefile=$data.readmeFile
-        Write-Host "##vso[task.setvariable variable=ResourceProvider;isOutput=true]$name"
-        Write-Host "##vso[task.setvariable variable=README_FILE;isOutput=true]$readmefile"
+        Write-Host "##vso[task.setvariable variable=ResourceProvider]$name"
+        Write-Host "##vso[task.setvariable variable=README_FILE]$readmefile"
       name: configResource
       displayName: "Set variable"
     - script: echo $(ResourceProvider)
@@ -67,6 +67,7 @@ stages:
         mkdir -p $(Pipeline.Workspace)/variables
         echo "$ResourceProvider" > $(Pipeline.Workspace)/variables/ResourceProvider
         echo "$README_FILE" > $(Pipeline.Workspace)/variables/README_FILE
+        ls -l $(Pipeline.Workspace)/variables
       displayName: "publish variable"
     - task: PublishPipelineArtifact@1
       inputs:
