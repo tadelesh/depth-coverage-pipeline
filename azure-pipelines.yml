@@ -65,8 +65,8 @@ stages:
       displayName: "Get variable"
     - script: |
         mkdir -p $(Pipeline.Workspace)/variables
-        echo "$ResourceProvider" > $(Pipeline.Workspace)/variables/ResourceProvider
-        echo "$README_FILE" > $(Pipeline.Workspace)/variables/README_FILE
+        echo "$(ResourceProvider)" > $(Pipeline.Workspace)/variables/ResourceProvider
+        echo "$(README_FILE)" > $(Pipeline.Workspace)/variables/README_FILE
         ls -l $(Pipeline.Workspace)/variables
       displayName: "publish variable"
     - task: PublishPipelineArtifact@1
