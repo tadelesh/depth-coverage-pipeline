@@ -83,7 +83,7 @@ stages:
         $instruction='Failed to generate code. Please check the codgen tool.'
         Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
         Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
-        echo $(NotifyUsers)
+        echo $env:NotifyUsers
   - job: alert
     dependsOn: ConfigAlert
     condition: succeeded()
