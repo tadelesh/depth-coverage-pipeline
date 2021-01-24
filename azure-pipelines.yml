@@ -85,8 +85,8 @@ stages:
         Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
         echo $(NotifyUsers)
   - job: alert
-    dependsOn: GenerateJob
-    condition: failed()
+    dependsOn: ConfigAlert
+    condition: succeeded()
     displayName: Wait for external validation  
     pool: server    
     timeoutInMinutes: 4320 # job times out in 3 days
