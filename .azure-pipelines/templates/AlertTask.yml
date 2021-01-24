@@ -4,7 +4,6 @@ steps:
   timeoutInMinutes: 1440
   inputs:
     notifyUsers: |
-      chunyu@microsoft.com
-      yuchun_green@hotmail.com
-    instructions: 'Please validate the build configuration and resume'
+      $(NotifyUsers)
+    instructions: $(AlertInstruction)
     onTimeout: 'resume'

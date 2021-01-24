@@ -28,6 +28,12 @@ variables:
   value: ""
 - name: TARGET
   value: TF
+- name: AlertInstruction
+  value: ""
+- name: NotifyUsers
+  value: ""
+- name: Artifcact
+  value: ""
 
 stages:
 - stage: setup
@@ -74,6 +80,11 @@ stages:
     pool: server    
     timeoutInMinutes: 4320 # job times out in 3 days
     steps:
+    - pwsh: |
+        $notify="chunyu@microsoft.com"
+        $instruction='Failed to generate $(TARGET) code. Please check the codgen tool.'
+        Write-Host "##vso[task.setvariable variable=NotifyUsers]$nofity"
+        Write-Host "##vso[task.setvariable variable=AlertInstruction]$instruction"
     - template: .azure-pipelines/templates/AlertTask.yml
 - stage: Build
   dependsOn: GenerateCode
