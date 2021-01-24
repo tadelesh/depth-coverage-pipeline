@@ -5,15 +5,17 @@ steps:
     git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
   displayName: 'pull repo'
 - script: |
+    echo $(README_FILE)
     npm install -g metadata-tool
-    metadata-tool $(README_FILE)
+    metadata-tool ./azure-rest-api-specs/$(README_FILE)
   displayName: 'Generate Trenton readme file'
 - script: |
     npm install -g autorest && npm install -g typescrip
   displayName: 'install autorest'
 - script: |
     echo $pwd
-    autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./ $(README_FILE)
+    mkdir generated
+    autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $RP]: Generate code failed"
       exit 1

@@ -81,8 +81,9 @@ stages:
     - pwsh: |
         $notify="chunyu@microsoft.com"
         $instruction='Failed to generate $(TARGET) code. Please check the codgen tool.'
-        Write-Host "##vso[task.setvariable variable=NotifyUsers]$nofity"
-        Write-Host "##vso[task.setvariable variable=AlertInstruction]$instruction"
+        Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
+        Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
+        echo $(NotifyUsers)
   - job: alert
     dependsOn: GenerateJob
     condition: failed()
