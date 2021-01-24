@@ -86,7 +86,7 @@ stages:
         echo $env:NotifyUsers
   - job: alert
     dependsOn: ConfigAlert
-    condition: succeeded()
+    condition: always()
     displayName: Wait for external validation  
     pool: server    
     timeoutInMinutes: 4320 # job times out in 3 days
