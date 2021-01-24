@@ -57,8 +57,9 @@ stages:
         echo $data
         $name=$data.RPName
         $readmefile=$data.readmeFile
-        Write-Host "##vso[task.setvariable variable=ResourceProvider]$name"
-        Write-Host "##vso[task.setvariable variable=README_FILE]$readmefile"
+        Write-Host "##vso[task.setvariable variable=ResourceProvider;isOutput=true]$name"
+        Write-Host "##vso[task.setvariable variable=README_FILE;isOutput=true]$readmefile"
+      name: configResource
       displayName: "Set variable"
     - script: echo $(ResourceProvider)
       displayName: "Get variable"
@@ -68,8 +69,9 @@ stages:
   jobs:
   - job: GenerateJob
     variables:
-    - name: TASK_KEY
-      value: GenerateCode
+      ResourceProvider: $[dependencies.config.outputs['configResource.ResourceProvider']]
+      README_FILE: $[dependencies.config.outputs['configResource.README_FILE']]
+      TASK_KEY: "GenerateCode"
     steps:
     - script: |
         echo $(ResourceProvider)
