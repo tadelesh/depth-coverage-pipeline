@@ -168,8 +168,8 @@ stages:
     condition: succeeded()
     displayName: confirm submit or customize
     variables:
-      NotifyUsers: $[ dependencies.ConfigAlert.outputs['setAlertStep.NotifyUsers'] ]
-      AlertInstruction: $[ dependencies.ConfigAlert.outputs['setAlertStep.AlertInstruction'] ]
+      NotifyUsers: "chunyu@microsoft.com"
+      AlertInstruction: "Please confirm if you want to submit the code or need to customize it."
     pool: server
     timeoutInMinutes: 4320 # job times out in 3 days
     steps:
