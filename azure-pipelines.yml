@@ -104,34 +104,28 @@ stages:
         echo 'end'
     - template: .azure-pipelines/templates/GenerateCode.yml
     - template: .azure-pipelines/templates/AfterTask.yml
-  # - job: ConfigAlert
-  #   dependsOn: GenerateJob
-  #   condition: failed()
-  #   displayName: "config alert"
-  #   steps:
-  #   - pwsh: |
-  #       $notify="chunyu@microsoft.com"
-  #       $instruction='Failed to generate tf code. Please check the codgen tool.'
-  #       Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
-  #       Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
-  #       echo $env:NotifyUsers
-  #     name: setAlertStep
-  - job: alert
+  - job: ConfigAlertJob
     dependsOn: GenerateJob
-    condition: always()
-    displayName: Wait for external validation
-    variables:
-      NotifyUsers: $[ dependencies.ConfigAlert.outputs['setAlertStep.NotifyUsers'] ]
-      AlertInstruction: $[ dependencies.ConfigAlert.outputs['setAlertStep.AlertInstruction'] ]
-    pool: server
-    timeoutInMinutes: 4320 # job times out in 3 days
+    condition: failed()
+    displayName: "config alert"
     steps:
     - pwsh: |
         $notify="chunyu@microsoft.com"
         $instruction='Failed to generate tf code. Please check the codgen tool.'
-        Write-Host "##vso[task.setvariable variable=NotifyUsers]$nofity"
-        Write-Host "##vso[task.setvariable variable=AlertInstruction]$instruction"
-      name: configAlert
+        Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
+        Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
+        echo $env:NotifyUsers
+      name: configAlertStep
+  - job: alert
+    dependsOn: ConfigAlertJob
+    condition: always()
+    displayName: Wait for external validation
+    variables:
+      NotifyUsers: $[dependencies.ConfigAlertJob.outputs['configAlertStep.NotifyUsers']]
+      AlertInstruction: $[dependencies.ConfigAlertJob.outputs['configAlertStep.AlertInstruction']]
+    pool: server
+    timeoutInMinutes: 4320 # job times out in 3 days
+    steps:
     - template: .azure-pipelines/templates/AlertTask.yml
 - stage: Build
   dependsOn: GenerateCode
