@@ -1,0 +1,29 @@
+steps:
+- script: |
+    if [$TRAGET == 'TF']; then
+      git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
+    fi
+    git clone https://github.com/Azure/azure-rest-api-specs.git
+    git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
+  displayName: 'pull repo'
+- script: |
+    echo $(README_FILE)
+    if [$TRAGET == 'TF']; then
+      sudo npm install -g metadata-tool
+      metadata-tool ./azure-rest-api-specs/$(README_FILE)
+    fi
+  displayName: 'Generate Trenton readme file'
+- script: |
+    sudo npm install -g autorest && sudo npm install -g typescript
+  displayName: 'install autorest'
+- script: |
+    echo $pwd
+    if [$TRAGET == 'TF']; then
+      mkdir generated
+      autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
+      if [ "$?" != "0" ]; then
+        echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $RP]: Generate code failed"
+        exit 1
+      fi
+    fi
+  displayName: 'Generate code'

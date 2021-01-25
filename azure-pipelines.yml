@@ -67,6 +67,7 @@ stages:
         mkdir -p $(Pipeline.Workspace)/variables
         echo "$(ResourceProvider)" > $(Pipeline.Workspace)/variables/ResourceProvider
         echo "$(README_FILE)" > $(Pipeline.Workspace)/variables/README_FILE
+        echo "$(TARGET)" > $(Pipeline.Workspace)/variables/TARGET
         ls -l $(Pipeline.Workspace)/variables
       displayName: "publish variable"
     - task: PublishPipelineArtifact@1
@@ -96,24 +97,27 @@ stages:
         README_FILE=$(cat $(Pipeline.Workspace)/variables/README_FILE)
         echo "##vso[task.setvariable variable=README_FILE]$README_FILE"
 
+        target=$(cat $(Pipeline.Workspace)/variables/TARGET)
+        echo "##vso[task.setvariable variable=TARGET]$target"
+
         echo $(ResourceProvider)
         echo 'end'
-    - template: .azure-pipelines/templates/Generate${{variables.TARGET}}.yml
+    - template: .azure-pipelines/templates/GenerateCode.yml
     - template: .azure-pipelines/templates/AfterTask.yml
-  - job: ConfigAlert
-    dependsOn: GenerateJob
-    condition: failed()
-    displayName: "config alert"
-    steps:
-    - pwsh: |
-        $notify="chunyu@microsoft.com"
-        $instruction='Failed to generate tf code. Please check the codgen tool.'
-        Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
-        Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
-        echo $env:NotifyUsers
-      name: setAlertStep
+  # - job: ConfigAlert
+  #   dependsOn: GenerateJob
+  #   condition: failed()
+  #   displayName: "config alert"
+  #   steps:
+  #   - pwsh: |
+  #       $notify="chunyu@microsoft.com"
+  #       $instruction='Failed to generate tf code. Please check the codgen tool.'
+  #       Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
+  #       Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
+  #       echo $env:NotifyUsers
+  #     name: setAlertStep
   - job: alert
-    dependsOn: ConfigAlert
+    dependsOn: GenerateJob
     condition: always()
     displayName: Wait for external validation
     variables:
@@ -122,6 +126,12 @@ stages:
     pool: server
     timeoutInMinutes: 4320 # job times out in 3 days
     steps:
+    - pwsh: |
+        $notify="chunyu@microsoft.com"
+        $instruction='Failed to generate tf code. Please check the codgen tool.'
+        Write-Host "##vso[task.setvariable variable=NotifyUsers]$nofity"
+        Write-Host "##vso[task.setvariable variable=AlertInstruction]$instruction"
+      name: configAlert
     - template: .azure-pipelines/templates/AlertTask.yml
 - stage: Build
   dependsOn: GenerateCode
