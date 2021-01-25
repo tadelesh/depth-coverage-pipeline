@@ -1,6 +1,6 @@
 steps:
 - script: |
-    if [$TRAGET == 'TF']; then
+    if [ '$(TRAGET)' == 'TF' ]; then
       git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
     fi
     git clone https://github.com/Azure/azure-rest-api-specs.git
@@ -8,7 +8,7 @@ steps:
   displayName: 'pull repo'
 - script: |
     echo $(README_FILE)
-    if [$TRAGET == 'TF']; then
+    if [ '$(TRAGET)' == 'TF']; then
       sudo npm install -g metadata-tool
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
     fi
@@ -18,7 +18,7 @@ steps:
   displayName: 'install autorest'
 - script: |
     echo $pwd
-    if [$TRAGET == 'TF']; then
+    if [ '$(TRAGET)' == 'TF' ]; then
       mkdir generated
       autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
       if [ "$?" != "0" ]; then
