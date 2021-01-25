@@ -3,19 +3,30 @@ steps:
     if [ '$(TRAGET)' == 'TF' ]; then
       git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
     fi
+
+    if [ '$(TARGET)' == 'CLI-core' || '$(TARGET)' == 'CLI-extension' ]; then
+      git clone https://github.com/Azure/azure-cli
+    fi
     git clone https://github.com/Azure/azure-rest-api-specs.git
     git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
   displayName: 'pull repo'
+- script: |
+    sudo npm install -g autorest && sudo npm install -g typescript
+  displayName: 'install autorest'
 - script: |
     echo $(README_FILE)
     if [ '$(TRAGET)' == 'TF']; then
       sudo npm install -g metadata-tool
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
     fi
-  displayName: 'Generate Trenton readme file'
-- script: |
-    sudo npm install -g autorest && sudo npm install -g typescript
-  displayName: 'install autorest'
+
+    if [ '$(TARGET)' == 'CLI-core' || '$(TARGET)' == 'CLI-extension' ]; then
+      sudo npm install -g az-depth-coverage --unsafe-perm=true --allow-root
+      sudo npm install -g autorest-autoconfig
+      depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
+      autorest --use=autorest-autoconfig@latest ./azure-rest-api-specs/$(README_FILE) --resource-file=${{RESOURCE_MAP-FILE}}
+    fi
+  displayName: 'Generate or update configuration file'
 - script: |
     echo $pwd
     if [ '$(TRAGET)' == 'TF' ]; then
@@ -25,5 +36,9 @@ steps:
         echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $RP]: Generate code failed"
         exit 1
       fi
+    fi
+
+    if [ '$(TARGET)' == 'CLI-core' || '$(TARGET)' == 'CLI-extension' ]; then
+      autorest --az --use=@autorest/az@latest ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli   --target-mode=core 
     fi
   displayName: 'Generate code'
