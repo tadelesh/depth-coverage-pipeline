@@ -24,7 +24,7 @@ steps:
       sudo npm install -g az-depth-coverage --unsafe-perm=true --allow-root
       sudo npm install -g autorest-autoconfig
       depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
-      autorest --use=autorest-autoconfig@latest ./azure-rest-api-specs/$(README_FILE) --resource-file=${{RESOURCE_MAP-FILE}}
+      autorest --use=autorest-autoconfig@latest ./azure-rest-api-specs/$(README_FILE) --resource-file=${{variables.RESOURCE_MAP_FILE}}
     fi
   displayName: 'Generate or update configuration file'
 - script: |
