@@ -15,7 +15,7 @@ steps:
   displayName: 'install autorest'
 - script: |
     echo $(README_FILE)
-    if [ '$(TRAGET)' == 'TF']; then
+    if [ '$(TRAGET)' == 'TF' ]; then
       sudo npm install -g metadata-tool
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
     fi
