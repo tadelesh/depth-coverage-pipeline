@@ -176,6 +176,7 @@ stages:
   #   - template: .azure-pipelines/templates/ConfirmTask.yml
   - job: confirm
     dependsOn: submit
+    condition: succeeded()
     displayName: confirm submit or customize
     steps:
     - script: |
