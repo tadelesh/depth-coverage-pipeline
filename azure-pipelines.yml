@@ -156,7 +156,7 @@ stages:
     steps:
     - script: echo 'LiveTest'
     displayName: LiveTest
-- stage: Submit
+- stage: SubmitStage
   dependsOn: LiveTest
   condition: succeeded()
   jobs:
@@ -188,5 +188,5 @@ stages:
         body=&(python script/onboard.py "Onboarding" "$(codePR)" "$(triggerPR)" "$(submitURL)" "$(customizeURL)")
         from_mail=$(username)
         to_mail="chunyu@microsoft.com"
-        python script/emailsender.py $(smtp_server) $(smpt_port) $(username) $(passowrd) $(from_mail) $(to_mail) "Onboarding" $(body)
+        echo $(python script/emailsender.py $(smtp_server) $(smpt_port) $(username) $(passowrd) $(from_mail) $(to_mail) "Onboarding" $(body))
       displayName: "send confirm email"
