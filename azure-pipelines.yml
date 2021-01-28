@@ -165,14 +165,29 @@ stages:
   - job: submit
     steps:
     - script: echo 'submit code to code repo'
+  # - job: confirm
+  #   dependsOn: submit
+  #   condition: succeeded()
+  #   displayName: confirm submit or customize
+  #   variables:
+  #     NotifyUsers: "chunyu@microsoft.com"
+  #     AlertInstruction: "Please confirm if you want to submit the code or need to customize it."
+  #   pool: server
+  #   timeoutInMinutes: 4320 # job times out in 3 days
+  #   steps:
+  #   - template: .azure-pipelines/templates/ConfirmTask.yml
   - job: confirm
     dependsOn: submit
-    condition: succeeded()
     displayName: confirm submit or customize
-    variables:
-      NotifyUsers: "chunyu@microsoft.com"
-      AlertInstruction: "Please confirm if you want to submit the code or need to customize it."
-    pool: server
-    timeoutInMinutes: 4320 # job times out in 3 days
     steps:
-    - template: .azure-pipelines/templates/ConfirmTask.yml
+    - script: |
+        codePRNumber=22
+        codePR="https://github.com/Azure/depth-coverage-pipeline/pull/$(codePRNumber}"
+        triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
+        submitURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
+        customizeURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
+        body=&(python script/onboard.py "Onboarding" "$(codePR)" "$(triggerPR)" "$(submitURL)" "$(customizeURL)")
+        from_mail=$(username)
+        to_mail="chunyu@microsoft.com"
+        python script/emailsender.py $(smtp_server) $(smpt_port) $(username) $(passowrd) $(from_mail) $(to_mail) "Onboarding" $(body)
+      displayName: "send confirm email"
