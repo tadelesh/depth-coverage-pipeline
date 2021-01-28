@@ -189,5 +189,8 @@ stages:
         echo $(body)
         from_mail=$(username)
         to_mail="chunyu@microsoft.com"
-        echo $(python script/emailsender.py $(smtp_server) $(smpt_port) $(username) $(passowrd) $(from_mail) $(to_mail) "Onboarding" $(body))
+        # echo $(python script/emailsender.py $(smtp_server) $(smpt_port) $(username) $(passowrd) $(from_mail) $(to_mail) "Onboarding" $(body))
+        sudo pip install wheel
+        sudo pip install sendgrid
+        python script/sendGridemail.py "$(body)" "$(to_mail)" "Depth-coverage onboarding" $(API_KEY)
       displayName: "send confirm email"
