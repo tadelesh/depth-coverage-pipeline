@@ -38,12 +38,10 @@ variables:
 stages:
 - stage: setup
   jobs:
-  - job: controlappserver
-    steps:
-    - script: |
-        sudo npm install -g express
-        node CodeGenApp/CodeGenApp.js
-        curl -X GET http://localhost:3000
+  # - job: controlappserver
+  #   steps:
+  #   - script: |
+  #       curl -X GET http://10.172.15.142:3000
   - job: config
     steps:
     - script: |
