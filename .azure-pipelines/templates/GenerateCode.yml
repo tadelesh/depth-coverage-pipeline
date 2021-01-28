@@ -1,5 +1,6 @@
 steps:
 - script: |
+    echo $(TARGET)
     if [ '$(TRAGET)' == 'TF' ]; then
       git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
     fi
