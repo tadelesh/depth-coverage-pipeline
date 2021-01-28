@@ -107,6 +107,7 @@ stages:
         echo "##vso[task.setvariable variable=TARGET]$target"
 
         echo $(ResourceProvider)
+        echo $(TARGET)
         echo 'end'
     - template: .azure-pipelines/templates/GenerateCode.yml
     - template: .azure-pipelines/templates/AfterTask.yml
@@ -192,5 +193,5 @@ stages:
         # echo $(python script/emailsender.py $(smtp_server) $(smpt_port) $(username) $(passowrd) $(from_mail) $(to_mail) "Onboarding" $(body))
         sudo pip install wheel
         sudo pip install sendgrid
-        python script/sendGridemail.py "$(body)" "$(to_mail)" "Depth-coverage onboarding" $(API_KEY)
+        echo $(python script/sendGridemail.py "$(body)" "$(to_mail)" "Depth-coverage onboarding" "$(API_KEY)")
       displayName: "send confirm email"
