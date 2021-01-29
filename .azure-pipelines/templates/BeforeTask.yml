@@ -6,5 +6,6 @@ steps:
     az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
     az storage blob download -c depthcoverage -f $(TARGET)-$(ResourceProvider)-generated.tar.gz -n $(TARGET)-$(ResourceProvider)-generated.tar.gz --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
     tar -xzvf $(TARGET)-$(ResourceProvider)-generated.tar.gz
-    ls -l $(ResourceProvider)
+    tar -czvf $(TARGET)-$(ResourceProvider)-generated.tar.gz generated/$(ResourceProvider)
+    ls -l generated/$(ResourceProvider)
   displayName: 'Before $(TASK_KEY)'
