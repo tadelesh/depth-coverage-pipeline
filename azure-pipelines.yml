@@ -27,7 +27,7 @@ variables:
 - name: README_FILE
   value: ""
 - name: TARGET
-  value: TF
+  value: CLI
 - name: AlertInstruction
   value: ""
 - name: NotifyUsers
@@ -107,23 +107,23 @@ stages:
         target=$(cat $(Pipeline.Workspace)/variables/TARGET)
         echo "##vso[task.setvariable variable=TARGET]$target"
 
-        echo $(ResourceProvider)
-        echo $(target)
+        echo $ResourceProvider
+        echo $target
         echo 'end'
     - template: .azure-pipelines/templates/GenerateCode.yml
     - template: .azure-pipelines/templates/AfterTask.yml
-  - job: ConfigAlertJob
-    dependsOn: GenerateJob
-    condition: failed()
-    displayName: "config alert"
-    steps:
-    - pwsh: |
-        $notify="chunyu@microsoft.com"
-        $instruction='Failed to generate tf code. Please check the codgen tool.'
-        Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
-        Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
-        echo $env:NotifyUsers
-      name: configAlertStep
+  # - job: ConfigAlertJob
+  #   dependsOn: GenerateJob
+  #   condition: failed()
+  #   displayName: "config alert"
+  #   steps:
+  #   - pwsh: |
+  #       $notify="chunyu@microsoft.com"
+  #       $instruction='Failed to generate tf code. Please check the codgen tool.'
+  #       Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
+  #       Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
+  #       echo $env:NotifyUsers
+  #     name: configAlertStep
   # - job: alert
   #   dependsOn: ConfigAlertJob
   #   condition: always()
