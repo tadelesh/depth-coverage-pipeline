@@ -4,7 +4,7 @@ from sendgrid.helpers.mail import Mail
 import codecs
 
 parser = argparse.ArgumentParser()
-parser.add_argument("content", help="email content")
+parser.add_argument("contentfile", help="email content")
 parser.add_argument("email", help="mail list")
 parser.add_argument("subject", help="mail subject")
 # parser.add_argument("release_version", help="release version")
@@ -14,7 +14,8 @@ args = parser.parse_args()
 from_email = 'codegen@azure-devex-tools.com'
 to_emails = args.email.split('_')
 subject = args.subject
-html_content = args.content
+f = codecs.open(args.contentfile, 'r')
+html_content = f.read()
 # subject = 'Onboading ' + args.release_version + ' is Released'
 # f = codecs.open(args.template, 'r')
 # html_content = f.read()
