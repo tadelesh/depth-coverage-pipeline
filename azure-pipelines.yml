@@ -194,5 +194,5 @@ stages:
         
         sudo pip install wheel
         sudo pip install sendgrid
-        echo $(python script/sendGridemail.py "$body" "$to_mail" "Depth-coverage onboarding" "$(API_KEY)")
+        python script/sendGridemail.py "$body" "$to_mail" "Depth-coverage onboarding" "$(API_KEY)"
       displayName: "send confirm email"
