@@ -17,6 +17,7 @@ steps:
 - script: |
     echo $(README_FILE)
     if [ '$(TRAGET)' == 'TF' ]; then
+      echo 'workOnTF'
       sudo npm install -g metadata-tool
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
     fi
