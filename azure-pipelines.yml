@@ -188,10 +188,10 @@ stages:
         submitURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
         customizeURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
         body=&(python script/onboard.py "Onboarding" "$(codePR)" "$(triggerPR)" "$(submitURL)" "$(customizeURL)")
-        echo $(body)
+        echo $body
         to_mail="chunyu@microsoft.com"
         
         sudo pip install wheel
         sudo pip install sendgrid
-        echo $(python script/sendGridemail.py "$(body)" "$(to_mail)" "Depth-coverage onboarding" "$(API_KEY)")
+        echo $(python script/sendGridemail.py "$body" "$to_mail" "Depth-coverage onboarding" "$(API_KEY)")
       displayName: "send confirm email"
