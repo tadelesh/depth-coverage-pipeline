@@ -141,7 +141,8 @@ stages:
   jobs:
   - job: build
     steps:
-    - template: .azure-pipelines/templates/BeforeTask.yml
+    - script: echo 'build'
+    # - template: .azure-pipelines/templates/BeforeTask.yml
 - stage: MockTest
   dependsOn: Build
   condition: succeeded()
