@@ -7,10 +7,10 @@
     <p>Please confirm if the <a href='{{codePR}}'>code </a> is ready to submit or need to customize.</p>
     <p>If the code is ready to submit, please click 'Submit' button. Otherwise please cutomize the code first and then click 'customize' button.</p>
     <form method="post">
-        <input type="submit" value="Submit" formaction="{{submitURL}}">
+        <a href="{{submitURL}}">Submit</a>
         <input type="hidden" name="triggerPR" value="{{triggerPR}}">
         <input type="hidden" name="codePR" value="{{codePR}}">
-        <input type="submit" value="Customize" formaction="{{customizeURL}}">    
+        <a href="{{customizeURL}}">Customize</a>   
     </form>
 </body>
 </html>
