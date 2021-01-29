@@ -30,7 +30,8 @@ steps:
   displayName: 'Generate or update configuration file'
 - script: |
     echo $pwd
-    $(TRAGET)
+    pwd
+    echo $(TRAGET)
     if [ '$(TRAGET)' == 'TF' ]; then
       echo "start tf code"
       mkdir generated
