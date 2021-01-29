@@ -1,6 +1,6 @@
 steps:
 - script: |
-    echo "$(TARGET)"
+    echo "$TARGET"
     if [ "$TRAGET" == "TF" ]; then
       git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
     fi
@@ -15,7 +15,7 @@ steps:
     sudo npm install -g autorest && sudo npm install -g typescript
   displayName: 'install autorest'
 - script: |
-    echo $(README_FILE)
+    echo "$README_FILE"
     if [ "$TRAGET" == "TF" ]; then
       echo 'workOnTF'
       sudo npm install -g metadata-tool
@@ -32,7 +32,7 @@ steps:
 - script: |
     echo $pwd
     pwd
-    echo $(TRAGET)
+    echo "$TRAGET"
     if [ "$TRAGET" == "TF" ]; then
       echo "start tf code"
       mkdir generated
