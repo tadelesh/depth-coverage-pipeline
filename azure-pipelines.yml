@@ -183,11 +183,11 @@ stages:
     steps:
     - script: |
         codePRNumber=22
-        codePR="https://github.com/Azure/depth-coverage-pipeline/pull/$(codePRNumber)"
+        codePR="https://github.com/Azure/depth-coverage-pipeline/pull/$codePRNumber"
         triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
         submitURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
         customizeURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
-        body=&(python script/onboard.py "Onboarding" "$(codePR)" "$(triggerPR)" "$(submitURL)" "$(customizeURL)")
+        body=&(python script/onboard.py "Onboarding" "$codePR" "$triggerPR" "$submitURL" "$customizeURL")
         echo $body
         to_mail="chunyu@microsoft.com"
         
