@@ -5,7 +5,7 @@ steps:
       git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
     fi
 
-    if [ '$(TARGET)' == 'CLI-core' || '$(TARGET)' == 'CLI-extension' ]; then
+    if [ '$(TARGET)' == 'CLI-core' ] || [ '$(TARGET)' == 'CLI-extension' ]; then
       git clone https://github.com/Azure/azure-cli
     fi
     git clone https://github.com/Azure/azure-rest-api-specs.git
@@ -21,7 +21,7 @@ steps:
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
     fi
 
-    if [ '$(TARGET)' == 'CLI-core' || '$(TARGET)' == 'CLI-extension' ]; then
+    if [ '$(TARGET)' == 'CLI-core' ] || [ '$(TARGET)' == 'CLI-extension' ]; then
       sudo npm install -g az-depth-coverage --unsafe-perm=true --allow-root
       sudo npm install -g autorest-autoconfig
       depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
@@ -39,7 +39,7 @@ steps:
       fi
     fi
 
-    if [ '$(TARGET)' == 'CLI-core' || '$(TARGET)' == 'CLI-extension' ]; then
+    if [ '$(TARGET)' == 'CLI-core' ] || [ '$(TARGET)' == 'CLI-extension' ]; then
       autorest --az --use=@autorest/az@latest ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli   --target-mode=core 
     fi
   displayName: 'Generate code'
