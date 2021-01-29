@@ -190,7 +190,8 @@ stages:
         customizeURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
         body=&(python script/onboard.py "Onboarding" "$codePR" "$triggerPR" "$submitURL" "$customizeURL")
         # echo "$body"
-        echo "$(body)" > email.html
+        
+        echo "$body" > email.html
         to_mail="chunyu@microsoft.com"
         
         sudo pip install wheel
