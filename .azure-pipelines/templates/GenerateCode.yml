@@ -1,11 +1,11 @@
 steps:
 - script: |
-    echo $(TARGET)
-    if [ '$(TRAGET)' == 'TF' ]; then
+    echo "$(TARGET)"
+    if [ "$(TRAGET)" == "TF" ]; then
       git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
     fi
 
-    if [ '$(TARGET)' == 'CLI-core' ] || [ '$(TARGET)' == 'CLI-extension' ]; then
+    if [ "$(TARGET)" == "CLI-core" ] || [ "$(TARGET)" == "CLI-extension" ]; then
       git clone https://github.com/Azure/azure-cli
     fi
     git clone https://github.com/Azure/azure-rest-api-specs.git
@@ -16,13 +16,13 @@ steps:
   displayName: 'install autorest'
 - script: |
     echo $(README_FILE)
-    if [ '$(TRAGET)' == 'TF' ]; then
+    if [ "$(TRAGET)" == "TF" ]; then
       echo 'workOnTF'
       sudo npm install -g metadata-tool
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
     fi
 
-    if [ '$(TARGET)' == 'CLI-core' ] || [ '$(TARGET)' == 'CLI-extension' ]; then
+    if [ "$(TARGET)" == "CLI-core" ] || [ "$(TARGET)" == "CLI-extension" ]; then
       sudo npm install -g az-depth-coverage --unsafe-perm=true --allow-root
       sudo npm install -g autorest-autoconfig
       depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
@@ -33,7 +33,7 @@ steps:
     echo $pwd
     pwd
     echo $(TRAGET)
-    if [ '$(TRAGET)' == 'TF' ]; then
+    if [ "$(TRAGET)" == "TF" ]; then
       echo "start tf code"
       mkdir generated
       autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
@@ -44,7 +44,7 @@ steps:
       fi
     fi
 
-    if [ '$(TARGET)' == 'CLI-core' ] || [ '$(TARGET)' == 'CLI-extension' ]; then
+    if [ "$(TARGET)" == "CLI-core" ] || [ "$(TARGET)" == "CLI-extension" ]; then
       autorest --az --use=@autorest/az@latest ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli   --target-mode=core 
     fi
   displayName: 'Generate code'
