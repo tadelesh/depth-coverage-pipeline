@@ -192,6 +192,7 @@ stages:
         # echo "$body"
         
         echo "$body" > email.html
+        cat email.html
         to_mail="chunyu@microsoft.com"
         
         sudo pip install wheel
