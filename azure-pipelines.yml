@@ -62,6 +62,7 @@ stages:
         $name=$data.RPName
         $readmefile=$data.readmeFile
         $target=$data.target
+        echo $target
         Write-Host "##vso[task.setvariable variable=ResourceProvider]$name"
         Write-Host "##vso[task.setvariable variable=README_FILE]$readmefile"
         Write-Host "##vso[task.setvariable variable=TARGET]$target"
@@ -107,7 +108,7 @@ stages:
         echo "##vso[task.setvariable variable=TARGET]$target"
 
         echo $(ResourceProvider)
-        echo $(TARGET)
+        echo $(target)
         echo 'end'
     - template: .azure-pipelines/templates/GenerateCode.yml
     - template: .azure-pipelines/templates/AfterTask.yml
@@ -190,7 +191,7 @@ stages:
         echo $(body)
         from_mail=$(username)
         to_mail="chunyu@microsoft.com"
-        # echo $(python script/emailsender.py $(smtp_server) $(smpt_port) $(username) $(passowrd) $(from_mail) $(to_mail) "Onboarding" $(body))
+        
         sudo pip install wheel
         sudo pip install sendgrid
         echo $(python script/sendGridemail.py "$(body)" "$(to_mail)" "Depth-coverage onboarding" "$(API_KEY)")
