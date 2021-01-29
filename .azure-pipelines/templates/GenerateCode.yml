@@ -30,7 +30,9 @@ steps:
   displayName: 'Generate or update configuration file'
 - script: |
     echo $pwd
+    $(TRAGET)
     if [ '$(TRAGET)' == 'TF' ]; then
+      echo "start tf code"
       mkdir generated
       autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
       ls -l generated/$(ResourceProvider)
