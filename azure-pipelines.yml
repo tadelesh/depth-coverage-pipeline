@@ -124,17 +124,17 @@ stages:
         Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
         echo $env:NotifyUsers
       name: configAlertStep
-  - job: alert
-    dependsOn: ConfigAlertJob
-    condition: always()
-    displayName: Wait for external validation
-    variables:
-      NotifyUsers: $[dependencies.ConfigAlertJob.outputs['configAlertStep.NotifyUsers']]
-      AlertInstruction: $[dependencies.ConfigAlertJob.outputs['configAlertStep.AlertInstruction']]
-    pool: server
-    timeoutInMinutes: 4320 # job times out in 3 days
-    steps:
-    - template: .azure-pipelines/templates/AlertTask.yml
+  # - job: alert
+  #   dependsOn: ConfigAlertJob
+  #   condition: always()
+  #   displayName: Wait for external validation
+  #   variables:
+  #     NotifyUsers: $[dependencies.ConfigAlertJob.outputs['configAlertStep.NotifyUsers']]
+  #     AlertInstruction: $[dependencies.ConfigAlertJob.outputs['configAlertStep.AlertInstruction']]
+  #   pool: server
+  #   timeoutInMinutes: 4320 # job times out in 3 days
+  #   steps:
+  #   - template: .azure-pipelines/templates/AlertTask.yml
 - stage: Build
   dependsOn: GenerateCode
   condition: succeeded()
