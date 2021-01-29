@@ -33,6 +33,7 @@ steps:
     if [ '$(TRAGET)' == 'TF' ]; then
       mkdir generated
       autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
+      ls -l generated/$(ResourceProvider)
       if [ "$?" != "0" ]; then
         echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $RP]: Generate code failed"
         exit 1
