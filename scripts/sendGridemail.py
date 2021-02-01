@@ -16,6 +16,7 @@ to_emails = args.email.split('_')
 subject = args.subject
 f = codecs.open(args.contentfile, 'r')
 html_content = f.read()
+print(html_content)
 # subject = 'Onboading ' + args.release_version + ' is Released'
 # f = codecs.open(args.template, 'r')
 # html_content = f.read()

@@ -15,7 +15,7 @@ import sys
 def Generate_HTML(title, codePR, triggerPR, submitURL, customizeURL):
   file_loader = FileSystemLoader('./')
   env = Environment(loader=file_loader)
-  template = env.get_template('script/onboardTemplate')
+  template = env.get_template('scripts/onboardTemplate')
   output = template.render(title=title, codePR=codePR, triggerPR=triggerPR, submitURL=submitURL, customizeURL=customizeURL);
   print(output)
   return output
@@ -24,7 +24,7 @@ def Generate_HTML(title, codePR, triggerPR, submitURL, customizeURL):
 if __name__ == "__main__":
 #   print(f"Arguments count: {len(sys.argv)}")
   if sys.argv[1] == "--help":
-    print("usage: python script/emailsender.py [title] [codePR] [triggerPR] [submitURL] [customizeURL]")
+    print("usage: python scripts/emailsender.py [title] [codePR] [triggerPR] [submitURL] [customizeURL]")
     
 #   for i, arg in enumerate(sys.argv):
 #     print(f"Argument {i:>6}: {arg}")

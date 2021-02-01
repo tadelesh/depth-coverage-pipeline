@@ -29,7 +29,7 @@ def send_email(smtp_host, smtp_port, username, password, from_mail, to_mail, sub
 if __name__ == "__main__":
     print(f"Arguments count: {len(sys.argv)}")
     if sys.argv[1] == "--help":
-      print("usage: python script/emailsender.py [smtp_server] [smpt_port] [username] [passowrd] [from_mail] [to_mail] [subject] [body]")
+      print("usage: python scripts/emailsender.py [smtp_server] [smpt_port] [username] [passowrd] [from_mail] [to_mail] [subject] [body]")
     
     for i, arg in enumerate(sys.argv):
       print(f"Argument {i:>6}: {arg}")
