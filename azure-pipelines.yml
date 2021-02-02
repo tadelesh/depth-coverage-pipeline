@@ -45,7 +45,7 @@ stages:
   - job: config
     steps:
     - script: |
-        sudo npm install -g az-depth-coverage --unsafe-perm=true --allow-root
+        sudo npm install -g depthcoverage --unsafe-perm=true --allow-root
         sudo apt-get install jq -y
       displayName: 'prepare'
     - script: |
