@@ -2,15 +2,19 @@ steps:
 - script: |
     echo 'setup go env'
     echo "$(ResourceProvider)"
+    mkdir go
+    dir=$pwd
+    export GOPATH=$dir/go
+    echo $GOPATH
   displayName: "setup Go environment"
 - script: |
     git clone https://github.com/Azure/azure-rest-api-specs.git
-    mkdir go
     mkdir -p ./go/src/github.com/terraform-providers
     cd ./go/src/github.com/terraform-providers
     git clone --branch pipeline https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/microsoft/terraform-provider-azurerm.git
     echo "https://${PIPELINE_USER}:${TF_TOKEN}@github.com" > ~/.git-credentials
     cd terraform-provider-azurerm
+    echo $GOPATH
     make tools
     git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
     
@@ -29,7 +33,7 @@ steps:
 - script: |
     pwd
     sed -i -e 's/\r$//' ./scripts/bash/linter-scripts/*.sh
-    cp ./scripts/bash/linter-scripts/*.sh /go/src/github.com/terraform-providers/terraform-provider-azurerm/scripts/
+    cp ./scripts/bash/linter-scripts/*.sh ./go/src/github.com/terraform-providers/terraform-provider-azurerm/scripts/
 
     cp -r ./generated/* ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services
     cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
