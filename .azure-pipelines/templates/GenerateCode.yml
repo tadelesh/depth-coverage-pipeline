@@ -24,10 +24,13 @@ steps:
     fi
 
     if [ "$sdktarget" == "CLI-core" ] || [ "$sdktarget" == "CLI-extension" ]; then
-      sudo npm install -g az-depth-coverage --unsafe-perm=true --allow-root
+      echo 'workonCLI'
+      sudo npm install -g depthcoverage --unsafe-perm=true --allow-root
       sudo npm install -g autorest-autoconfig
-      depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
-      autorest --use=autorest-autoconfig@latest ./azure-rest-api-specs/$(README_FILE) --resource-file=${{variables.RESOURCE_MAP_FILE}}
+      depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=27
+      ls -l
+      autorest --use=autorest-autoconfig@latest ./azure-rest-api-specs/$(README_FILE) --resource-file=./$(RESOURCE_MAP_FILE)
+      ls -l ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager
     fi
   displayName: 'Generate or update configuration file'
 - script: |
@@ -37,7 +40,7 @@ steps:
     if [ "$sdktarget" == "TF" ]; then
       echo "start tf code"
       mkdir generated
-      autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
+      autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --generate-extra-acctest=true --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
       ls -l generated/$(ResourceProvider)
       if [ "$?" != "0" ]; then
         echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $(ResourceProvider)]: Generate code failed"
@@ -46,6 +49,7 @@ steps:
     fi
 
     if [ "$sdktarget" == "CLI-core" ] || [ "$sdktarget" == "CLI-extension" ]; then
-      autorest --az --use=@autorest/az@latest ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli   --target-mode=core 
+      autorest --az --use=@autorest/az@latest ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli  --target-mode=core
+      
     fi
   displayName: 'Generate code'

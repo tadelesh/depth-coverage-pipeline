@@ -49,7 +49,7 @@ stages:
         sudo apt-get install jq -y
       displayName: 'prepare'
     - script: |
-        depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=6
+        depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=27
         # rp=`jq .RPName $(RESOURCE_MAP_FILE)`
         # echo $rp
         # echo '##vso[task.setvariable variable=ResourceProvider]$rp'
@@ -60,12 +60,26 @@ stages:
         $data = Get-content $jsonfile | ConvertFrom-Json
         echo $data
         $name=$data.RPName
+        
         $readmefile=$data.readmeFile
         $target=$data.target
         echo $target
         Write-Host "##vso[task.setvariable variable=ResourceProvider]$name"
         Write-Host "##vso[task.setvariable variable=README_FILE]$readmefile"
         Write-Host "##vso[task.setvariable variable=TARGET]$target"
+        $af=""
+        if($target -eq "TF") {
+          $af="generated/$name"
+        } else {
+          if($name -eq "compute") {
+            $af="./azure-cli/src/azure-cli/azure/cli/command_modules/vm ./azure-cli/src/azure-cli/requirements*.txt ./azure-cli/doc/sphinx/azhelpgen/doc_source_map.json"
+          } else {
+            $af="./azure-cli/src/azure-cli/azure/cli/command_modules/$name ./azure-cli/src/azure-cli/requirements*.txt ./azure-cli/doc/sphinx/azhelpgen/doc_source_map.json"
+          }
+        }
+
+        echo $af
+        Write-Host "##vso[task.setvariable variable=Artifcact]$af"
       name: configResource
       displayName: "Set variable"
     - script: echo $(ResourceProvider)
@@ -75,6 +89,9 @@ stages:
         echo "$(ResourceProvider)" > $(Pipeline.Workspace)/variables/ResourceProvider
         echo "$(README_FILE)" > $(Pipeline.Workspace)/variables/README_FILE
         echo "$(TARGET)" > $(Pipeline.Workspace)/variables/TARGET
+        echo "$(Artifcact)" > $(Pipeline.Workspace)/variables/Artifact
+
+        echo ""
         ls -l $(Pipeline.Workspace)/variables
       displayName: "publish variable"
     - task: PublishPipelineArtifact@1
@@ -116,7 +133,7 @@ stages:
   #   - template: .azure-pipelines/templates/AlertTask.yml
 - stage: Build
   dependsOn: GenerateCode
-  condition: succeeded()
+  condition: and(succeeded(), eq(variables['TARGET'], 'TF'))
   jobs:
   - job: build
     steps:
@@ -125,8 +142,10 @@ stages:
     - template: .azure-pipelines/templates/BuildTF.yml
     # - template: .azure-pipelines/templates/BeforeTask.yml
 - stage: MockTest
-  dependsOn: Build
-  condition: succeeded()
+  dependsOn:
+  - GenerateCode
+  - Build
+  condition: or(and(ne(variables['TARGET'], 'TF'), succeeded('GenerateCode')), succeeded())
   jobs:
   - job: MockTest
     steps:
@@ -134,7 +153,7 @@ stages:
     displayName: MockTest
 - stage: LiveTest
   dependsOn: MockTest
-  condition: succeeded()
+  condition: succeeded('MockTest')
   jobs:
   - job: LiveTest
     steps:
@@ -142,7 +161,7 @@ stages:
     displayName: LiveTest
 - stage: SubmitStage
   dependsOn: LiveTest
-  condition: succeeded()
+  condition: succeeded('LiveTest')
   jobs:
   - job: submit
     steps:
@@ -163,21 +182,24 @@ stages:
     condition: succeeded()
     displayName: confirm submit or customize
     steps:
+    - template: .azure-pipelines/templates/VariableSetTask.yml
     - script: |
         codePRNumber=22
         codePR="https://github.com/Azure/depth-coverage-pipeline/pull/$codePRNumber"
         triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
         submitURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
         customizeURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Trigger"
-        body=&(python scripts/onboard.py "Onboarding" "$codePR" "$triggerPR" "$submitURL" "$customizeURL")
+        # body=&(python scripts/onboard.py "Onboarding" "conboarding" "$codePR" "$triggerPR" "$submitURL" "$customizeURL")
         # echo "$body"
         
-        echo "$body" > email.html
-        cat email.html
+        python scripts/onboard.py "Onboarding" "Onboarding $(ResourceProvider) confirm" "$codePR" "$triggerPR" "$submitURL" "$customizeURL" > scripts/email.html
+        echo "start of email"
+        cat scripts/email.html
+        echo "end of email"
         to_mail="chunyu@microsoft.com"
         
         sudo pip install wheel
         sudo pip install sendgrid
-        python scripts/sendGridemail.py "email.html" $to_mail "Depth-coverage onboarding" $(API_KEY)
+        python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Onboarding Confirm" $(API_KEY)
         echo "end of send email"
       displayName: "send confirm email"

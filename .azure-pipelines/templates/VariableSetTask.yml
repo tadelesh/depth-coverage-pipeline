@@ -14,7 +14,11 @@ steps:
     target=$(cat $(Pipeline.Workspace)/variables/TARGET)
     echo "##vso[task.setvariable variable=TARGET]$target"
 
+    af=$(cat $(Pipeline.Workspace)/variables/Artifact)
+    echo "##vso[task.setvariable variable=Artifact]$af"
+
     echo $ResourceProvider
     echo $target
+    echo $af
     echo 'end' 
   displayName: 'set variable'
