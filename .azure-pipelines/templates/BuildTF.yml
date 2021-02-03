@@ -17,7 +17,7 @@ steps:
     export GOPATH=/home/vsts/work/1/s/go
     echo $GOPATH
     make tools
-    git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
+    git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3"
     
   displayName: "pull repo"
 - script: |
@@ -37,9 +37,13 @@ steps:
     cp ./scripts/bash/linter-scripts/*.sh ./go/src/github.com/terraform-providers/terraform-provider-azurerm/scripts/
 
     cp -r ./generated/* ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services
+    echo "$(ResourceProvider)"
+    ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)
+    echo 'end of ls'
     cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
     echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go."
     CLIENT_IMPORT=`cat azurerm/internal/services/$(ResourceProvider)/trenton-configuration/configuration_client | sed -n 1p`
+    echo "${CLIENT_IMPORT}"
     CLIENT_STRUCT=`cat azurerm/internal/services/$(ResourceProvider)/trenton-configuration/configuration_client | sed -n 2p`
     CLIENT_NEW=`cat azurerm/internal/services/$(ResourceProvider)/trenton-configuration/configuration_client | sed -n 3p`
     CLIENT_IMPORT_ORI="web \"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\/client\""
@@ -51,8 +55,8 @@ steps:
     SERVICE_IMPORT_ORI="\"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\""
     SERVICE_REGISTRATION_ORI="web.Registration{},"
 
-    if cat azurerm/internal/clients/client.go | grep -q "/${RP}/"; then
-      PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/${RP}/" | awk '{print $1}'`
+    if cat azurerm/internal/clients/client.go | grep -q "/${ResourceProvider}/"; then
+      PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/${ResourceProvider}/" | awk '{print $1}'`
       sed -i "s|^.*${PACKAGE_NAME_ORI} \"github.*$|${CLIENT_IMPORT}|" azurerm/internal/clients/client.go
       sed -i "s/^.*\*${PACKAGE_NAME_ORI}\.Client.*$/${CLIENT_STRUCT}/" azurerm/internal/clients/client.go
       sed -i "s/^.*${PACKAGE_NAME_ORI}\.NewClient(o).*$/${CLIENT_NEW}/" azurerm/internal/clients/client.go
