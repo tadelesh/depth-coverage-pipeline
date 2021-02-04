@@ -1,0 +1,18 @@
+steps:
+- script: |
+    codePRNumber=22
+    codePR="https://github.com/Azure/depth-coverage-pipeline/pull/$codePRNumber"
+    triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
+    resolveURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Resolve"
+        
+    python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
+    echo "start of email"
+    cat scripts/email.html
+    echo "end of email"
+    to_mail="chunyu@microsoft.com"
+        
+    sudo pip install wheel
+    sudo pip install sendgrid
+    python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Issue Resolve" $(API_KEY)
+    echo "end of send email"
+  displayName: 'Alert issue'

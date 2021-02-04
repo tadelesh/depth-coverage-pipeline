@@ -72,9 +72,9 @@ stages:
           $af="generated/$name"
         } else {
           if($name -eq "compute") {
-            $af="./azure-cli/src/azure-cli/azure/cli/command_modules/vm ./azure-cli/src/azure-cli/requirements*.txt ./azure-cli/doc/sphinx/azhelpgen/doc_source_map.json"
+            $af="./azure-cli/src/azure-cli/azure/cli/command_modules/vm ./azure-cli/src/azure-cli/requirements*.txt ./azure-cli/doc/sphinx/azhelpgen/doc_source_map.json ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md"
           } else {
-            $af="./azure-cli/src/azure-cli/azure/cli/command_modules/$name ./azure-cli/src/azure-cli/requirements*.txt ./azure-cli/doc/sphinx/azhelpgen/doc_source_map.json"
+            $af="./azure-cli/src/azure-cli/azure/cli/command_modules/$name ./azure-cli/src/azure-cli/requirements*.txt ./azure-cli/doc/sphinx/azhelpgen/doc_source_map.json ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md"
           }
         }
 
@@ -108,29 +108,6 @@ stages:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - template: .azure-pipelines/templates/GenerateCode.yml
     - template: .azure-pipelines/templates/AfterTask.yml
-  # - job: ConfigAlertJob
-  #   dependsOn: GenerateJob
-  #   condition: failed()
-  #   displayName: "config alert"
-  #   steps:
-  #   - pwsh: |
-  #       $notify="chunyu@microsoft.com"
-  #       $instruction='Failed to generate tf code. Please check the codgen tool.'
-  #       Write-Host "##vso[task.setvariable variable=NotifyUsers;isOutput=true]$nofity"
-  #       Write-Host "##vso[task.setvariable variable=AlertInstruction;isOutput=true]$instruction"
-  #       echo $env:NotifyUsers
-  #     name: configAlertStep
-  # - job: alert
-  #   dependsOn: ConfigAlertJob
-  #   condition: always()
-  #   displayName: Wait for external validation
-  #   variables:
-  #     NotifyUsers: $[dependencies.ConfigAlertJob.outputs['configAlertStep.NotifyUsers']]
-  #     AlertInstruction: $[dependencies.ConfigAlertJob.outputs['configAlertStep.AlertInstruction']]
-  #   pool: server
-  #   timeoutInMinutes: 4320 # job times out in 3 days
-  #   steps:
-  #   - template: .azure-pipelines/templates/AlertTask.yml
 - stage: Build
   dependsOn: GenerateCode
   condition: and(succeeded(), eq(variables['TARGET'], 'TF'))
@@ -140,7 +117,6 @@ stages:
     - template: .azure-pipelines/templates/BeforeTask.yml
     - script: echo 'build'
     - template: .azure-pipelines/templates/BuildTF.yml
-    # - template: .azure-pipelines/templates/BeforeTask.yml
 - stage: MockTest
   dependsOn:
   - GenerateCode
@@ -150,6 +126,9 @@ stages:
   - job: MockTest
     steps:
     - script: echo 'MockTest'
+    - template: .azure-pipelines/templates/SetupCliTestEnv.yml
+    - template: .azure-pipelines/templates/SetupCliMockServerEnv.yml
+    - template: .azure-pipelines/templates/RunCliTest.yml
     displayName: MockTest
 - stage: LiveTest
   dependsOn: MockTest
@@ -166,17 +145,6 @@ stages:
   - job: submit
     steps:
     - script: echo 'submit code to code repo'
-  # - job: confirm
-  #   dependsOn: submit
-  #   condition: succeeded()
-  #   displayName: confirm submit or customize
-  #   variables:
-  #     NotifyUsers: "chunyu@microsoft.com"
-  #     AlertInstruction: "Please confirm if you want to submit the code or need to customize it."
-  #   pool: server
-  #   timeoutInMinutes: 4320 # job times out in 3 days
-  #   steps:
-  #   - template: .azure-pipelines/templates/ConfirmTask.yml
   - job: confirm
     dependsOn: submit
     condition: succeeded()

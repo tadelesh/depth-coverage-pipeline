@@ -1,0 +1,4 @@
+steps:
+- script: |
+    azdev test vm --live --discover
+  displayName: 'CLI Test'

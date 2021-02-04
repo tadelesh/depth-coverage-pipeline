@@ -1,0 +1,16 @@
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+    architecture: 'x64'
+- script: |
+    python -m venv ./venv
+    cat ./scripts/cli-requirements.txt | xargs -n 1 /opt/venv/bin/pip install  || echo "some installation failed, but still go on..."
+    . venv/bin/activate
+    azdev setup --cli ./azure-cli
+    cat ./azure-cli/src/azure-cli/requirements.py3.Linux.txt |xargs -n 1 ./venv/bin/pip install
+    az login --service-principal --username [PLACEHOLDER] --password [PLACEHOLDER] --tenant [PLACEHOLDER]
+    export extension_name=`cat $readme_file_path/readme.az.md | grep extensions | awk '{print $NF}' | tr -d '\r'`
+    azdev test $extension_name --live --discover
+  displayName: 'cli Test Env Setup'
