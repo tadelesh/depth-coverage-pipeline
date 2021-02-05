@@ -1,16 +1,22 @@
 steps:
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '3.x'
+    versionSpec: '3.7.9'
     addToPath: true
     architecture: 'x64'
-- script: |
+- bash: |
+    git clone https://github.com/Azure/azure-cli
+    git clone https://github.com/Azure/azure-rest-api-specs.git
+    python --version
     python -m venv ./venv
-    cat ./scripts/cli-requirements.txt | xargs -n 1 /opt/venv/bin/pip install  || echo "some installation failed, but still go on..."
+    cat ./scripts/config/cli-requirements.txt | xargs -n 1 ./venv/bin/pip install  || echo "some installation failed, but still go on..."
     . venv/bin/activate
     azdev setup --cli ./azure-cli
     cat ./azure-cli/src/azure-cli/requirements.py3.Linux.txt |xargs -n 1 ./venv/bin/pip install
-    az login --service-principal --username [PLACEHOLDER] --password [PLACEHOLDER] --tenant [PLACEHOLDER]
-    export extension_name=`cat $readme_file_path/readme.az.md | grep extensions | awk '{print $NF}' | tr -d '\r'`
+    az login --service-principal --username $(SERVICE_PRINCIPE_ID) --password $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
+    first="./azure-rest-api-specs$(README_FILE)"
+    second="readme.az.md"
+    readme_file_path=${first/readme.md/$second}
+    export extension_name=`cat $readme_file_path | grep extensions | awk '{print $NF}' | tr -d '\r'`
     azdev test $extension_name --live --discover
   displayName: 'cli Test Env Setup'

@@ -1,24 +1,24 @@
 
 #!/bin/bash
-cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
+cd $GOPATH/src/github.com/terraform-providers/terraform-provider-azurerm
 
-echo -e "\e[32m[$(date -u)] LOG: [$(ResourceProvider)]: make goimports"
+echo -e "\e[32m[$(date -u)] LOG: [$RP]: make goimports"
 make goimports
 if [ "$?" != "0" ]; then
-    echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: make goimports failed"
+    echo -e "\e[31m[$(date -u)] ERROR: [$RP]: make goimports failed"
     exit 1
 fi
 
-echo -e "\e[32m[$(date -u)] LOG: [$(ResourceProvider)]: make fmt"
+echo -e "\e[32m[$(date -u)] LOG: [$RP]: make fmt"
 make fmt
 if [ "$?" != "0" ]; then
-    echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: make fmt failed"
+    echo -e "\e[31m[$(date -u)] ERROR: [$RP]: make fmt failed"
     exit 1
 fi
 
-echo -e "\e[32m[$(date -u)] LOG: [$(ResourceProvider)]: make build"
+echo -e "\e[32m[$(date -u)] LOG: [$RP]: make build"
 make build
 if [ "$?" != "0" ]; then
-    echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: make build failed"
+    echo -e "\e[31m[$(date -u)] ERROR: [$RP]: make build failed"
     exit 1
 fi

@@ -1,9 +1,9 @@
 steps:
-- script: |
+- bash: |
     git clone https://github.com/Azure/avs.git
     cd avs
-    npm install && npm run start
+    sudo npm install && sudo npm run start
     set AZURE_CLI_DISABLE_CONNECTION_VERIFICATION=1
     az cloud register -n virtualCloud --endpoint-resource-manager "https://localhost:8443"
-    
+
   displayName: 'setup cli mock env'

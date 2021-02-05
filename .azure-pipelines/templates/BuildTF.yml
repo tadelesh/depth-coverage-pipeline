@@ -1,12 +1,17 @@
 steps:
-- script: |
-    echo 'setup go env'
-    echo "$(ResourceProvider)"
-    mkdir go
-    dir=$pwd
-    export GOPATH=$dir/go
-    echo $GOPATH
-  displayName: "setup Go environment"
+# - script: |
+#     echo 'setup go env'
+#     echo "$(ResourceProvider)"
+#     mkdir go
+#     dir=$pwd
+#     export GOPATH=$dir/go
+#     echo $GOPATH
+#   displayName: "setup Go environment"
+- task: GoTool@0
+  inputs:
+    version: '1.15.x'
+    goPath: '/home/vsts/work/1/s/go'
+    goBin: '/home/vsts/work/1/s/go/bin'
 - script: |
     git clone https://github.com/Azure/azure-rest-api-specs.git
     mkdir -p ./go/src/github.com/terraform-providers
@@ -16,10 +21,12 @@ steps:
     cd terraform-provider-azurerm
     export GOPATH=/home/vsts/work/1/s/go
     echo $GOPATH
+    GO111MODULE=off go get github.com/shopspring/decimal
     make tools
     git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3"
     
   displayName: "pull repo"
+  condition: eq(variables['TARGET'], 'TF')
 - script: |
     sudo npm install -g autorest && sudo npm install -g typescript
   displayName: "install autorest"
@@ -31,17 +38,19 @@ steps:
       exit 1
     fi
   displayName: "build go-sdk"
-- script: |
+  condition: eq(variables['TARGET'], 'TF')
+- bash: |
     pwd
     sed -i -e 's/\r$//' ./scripts/bash/linter-scripts/*.sh
     cp ./scripts/bash/linter-scripts/*.sh ./go/src/github.com/terraform-providers/terraform-provider-azurerm/scripts/
 
-    cp -r ./generated/* ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services
+    cp -r ./generated/* ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/
     echo "$(ResourceProvider)"
     ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)
     echo 'end of ls'
     cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
     echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go."
+
     CLIENT_IMPORT=`cat azurerm/internal/services/$(ResourceProvider)/trenton-configuration/configuration_client | sed -n 1p`
     echo "${CLIENT_IMPORT}"
     CLIENT_STRUCT=`cat azurerm/internal/services/$(ResourceProvider)/trenton-configuration/configuration_client | sed -n 2p`
@@ -55,49 +64,82 @@ steps:
     SERVICE_IMPORT_ORI="\"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\""
     SERVICE_REGISTRATION_ORI="web.Registration{},"
 
-    if cat azurerm/internal/clients/client.go | grep -q "/${ResourceProvider}/"; then
-      PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/${ResourceProvider}/" | awk '{print $1}'`
+    cat azurerm/internal/clients/client.go | grep -q "/$(ResourceProvider)/"|echo $?
+    if cat azurerm/internal/clients/client.go | grep -q "/$(ResourceProvider)/"; then
+      echo "find $(ResourceProvider)"
+      cat azurerm/internal/clients/client.go | grep "/$(ResourceProvider)/"
+      PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/$(ResourceProvider)/" | awk '{print $1}'`
+      echo "${PACKAGE_NAME_ORI}"
+      echo "end"
       sed -i "s|^.*${PACKAGE_NAME_ORI} \"github.*$|${CLIENT_IMPORT}|" azurerm/internal/clients/client.go
       sed -i "s/^.*\*${PACKAGE_NAME_ORI}\.Client.*$/${CLIENT_STRUCT}/" azurerm/internal/clients/client.go
       sed -i "s/^.*${PACKAGE_NAME_ORI}\.NewClient(o).*$/${CLIENT_NEW}/" azurerm/internal/clients/client.go
     else
+      echo "not find $(ResourceProvider)"
       sed -i "/$CLIENT_IMPORT_ORI/a $CLIENT_IMPORT" azurerm/internal/clients/client.go
       sed -i "/$CLIENT_STRUCT_ORI/a $CLIENT_STRUCT" azurerm/internal/clients/client.go
       sed -i "/$CLIENT_NEW_ORI/a $CLIENT_NEW" azurerm/internal/clients/client.go
       sed -i "/$SERVICE_IMPORT_ORI/a $SERVICE_IMPORT" azurerm/internal/provider/services.go
       sed -i "/$SERVICE_REGISTRATION_ORI/a $SERVICE_REGISTRATION" azurerm/internal/provider/services.go
     fi
+
+    cat azurerm/internal/clients/client.go | grep "/$(ResourceProvider)/"
     echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go successfully."
-  displayName: ""
-- script: |
+  displayName: "config client.go and service.go"
+  condition: eq(variables['TARGET'], 'TF')
+- template: AfterTask.yml
+- bash: |
+    export GOPATH=/home/vsts/work/1/s/go
+    export PATH=$PATH:$GOPATH/bin
     pwd
     # delete generated trenton configuration
     rm -r ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/trenton-configuration
     # move doc
-    mv ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/website/docs/d/* ./go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/
-    mv ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/website/docs/r/* ./go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/
+    # cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
+    pwd
+    echo "$(Pipeline.Workspace)"
+    ls -l /home/vsts/work/1/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/website/docs/d/
+    echo "end of wesit list"
+    mv $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/website/docs/d/* $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/
+    mv $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/website/docs/r/* $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/
 
-    echo -e "\e[32m[$(date -u)] LOG: [$OPERATION : $(ResourceProvider)]: Format Test and Document"
+    echo -e "\e[32m[$(date -u)] LOG: [$(ResourceProvider)]: Format Test and Document"
     # fmt tests
-    find ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider) | sort | while read f; do terrafmt fmt -f $f; done
+    cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
+    find $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider) | sort | while read f; do terrafmt fmt -f $f; done
 
     # fmt document
-    find ./go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/ | egrep "html.markdown" | sort | while read f; do terrafmt fmt -f $f; done
-    find ./go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/r/ | egrep "html.markdown" | sort | while read f; do terrafmt fmt -f $f; done
+    find $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/ | egrep "html.markdown" | sort | while read f; do terrafmt fmt -f $f; done
+    find $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/r/ | egrep "html.markdown" | sort | while read f; do terrafmt fmt -f $f; done
   displayName: "pre-build"
-- script: |
-    echo -e "\e[32m[$(date -u)] LOG: [$OPERATION : $(ResourceProvider)]: Compile Generated code"
+  condition: eq(variables['TARGET'], 'TF')
+- bash: |
+    echo -e "\e[32m[$(date -u)] LOG: [$(ResourceProvider)]: Compile Generated code"
+    # export env
+    export GOPATH=/home/vsts/work/1/s/go
+    export PATH=$PATH:$GOPATH/bin
+    export RP=$(ResourceProvider)
     bash ./scripts/bash/compile.sh
     if [ "$?" != "0" ]; then
-      echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $(ResourceProvider)]: Compile Generated code failed"
+      echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Compile Generated code failed"
       exit 1
     fi
 
     #Run linter for generated code
-    echo -e "\e[32m[$(date -u)] LOG: [$OPERATION : $(ResourceProvider)]: RUN TFLinter"
+    echo -e "\e[32m[$(date -u)] LOG: [$(ResourceProvider)]: RUN TFLinter"
     bash ./scripts/bash/tflinter.sh
     if [ "$?" != "0" ]; then
-        echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $(ResourceProvider)]: RUN TFLinter failed"
+        echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: RUN TFLinter failed"
         exit 1
-     fi 
+     fi
+
+     # submit to repo
+     cd $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm
+     git config credential.helper store; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
+     git checkout -b $(TARGET)$(ResourceProvider); git branch; git add -A; git commit -m "autogenerated"; git push origin $(TARGET)$(ResourceProvider);
   displayName: "build"
+  name: "buildstep"
+  condition: eq(variables['TARGET'], 'TF')
+- bash: |
+    echo "alert issue"
+  displayName: 'Alert issue'

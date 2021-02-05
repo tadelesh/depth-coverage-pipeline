@@ -22,6 +22,6 @@ if __name__ == "__main__":
   codePR = sys.argv[3]
   triggerPR = sys.argv[4]
 
-  resolveURL = sys.argv[6]
+  resolveURL = sys.argv[5]
 
   Generate_HTML(title, head, codePR, triggerPR, resolveURL)
