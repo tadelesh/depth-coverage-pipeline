@@ -4,4 +4,8 @@ steps:
     . venv/bin/activate
     which azdev
     azdev test vm --live --discover
+    if [ "$?" != "0" ]; then
+      echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: CLI Test failed"
+      exit 1
+    fi
   displayName: 'CLI Test'

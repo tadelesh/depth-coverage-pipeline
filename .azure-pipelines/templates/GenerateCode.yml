@@ -58,7 +58,7 @@ steps:
       echo 'workonCLI'
       sudo npm install -g depthcoverage --unsafe-perm=true --allow-root
       sudo npm install -g autorest-autoconfig
-      depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=27
+      depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=$(System.PullRequest.PullRequestNumber)
       ls -l
       autorest --use=autorest-autoconfig@latest ./azure-rest-api-specs/$(README_FILE) --resource-file=./$(RESOURCE_MAP_FILE)
       ls -l ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager
@@ -81,7 +81,7 @@ steps:
       autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-latest.tgz --generate-extra-acctest=true --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
       ls -l generated/$(ResourceProvider)
       if [ "$?" != "0" ]; then
-        echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $(ResourceProvider)]: Generate code failed"
+        echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Generate code failed"
         exit 1
       fi
     fi
