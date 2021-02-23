@@ -84,8 +84,8 @@ stages:
         echo $af
         Write-Host "##vso[task.setvariable variable=Artifcact]$af"
 
-        Write-Host "##vso[task.setvariable variable=ignore;isOutput=true]$ignore"
-        Write-Host "##vso[task.setvariable variable=excludestages;isOutput=true]$excludedStages TestFailure"
+        Write-Host "##vso[task.setvariable variable=ignore;isOutput=true]$ignore TestFailure"
+        Write-Host "##vso[task.setvariable variable=excludestages;isOutput=true]$excludedStages"
       name: configResource
       displayName: "Set variable"
     - script: echo $(ResourceProvider)
@@ -224,7 +224,7 @@ stages:
   dependsOn:
   - setup
   - LiveTest
-  condition: or(succeeded('LiveTest'),  contains(stageDependencies.setup.outputs['config.configResource.ignore'], 'TestFailure')
+  condition: or(succeeded('LiveTest'),  contains(stageDependencies.setup.outputs['config.configResource.ignore'], 'TestFailure'))
   jobs:
   - job: submit
     steps:
