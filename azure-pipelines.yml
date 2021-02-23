@@ -255,7 +255,8 @@ stages:
     steps:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - script: |
-        codePR=$(curl -X POST -H "Content-Type: application/json" http://cdgen.azurewebsites.net/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"$(PIPELINE_ORG)", "repo":"$(PIPELINE_REPO)", "title":"pull request of $(ResourceProvider)", "branch":"depth-$(TARGET)-$(ResourceProvider)", "base":"main"')
+        codePR=$(curl -X POST -H "Content-Type: application/json" http://codegenapp.azurewebsites.net/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"$(PIPELINE_ORG)", "repo":"$(PIPELINE_REPO)", "title":"pull request of $(ResourceProvider)", "branch":"depth-$(TARGET)-$(ResourceProvider)", "base":"main"')
+        echo $codePR
         # codePRNumber=22
         # codePR="https://github.com/Azure/depth-coverage-pipeline/pull/$codePRNumber"
         triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
