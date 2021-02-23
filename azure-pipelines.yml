@@ -119,7 +119,7 @@ stages:
     - template: .azure-pipelines/templates/AfterTask.yml
 - stage: Build
   dependsOn: GenerateCode
-  condition: and(succeeded(), eq(stageDependencies.GenerateCode.GenerateJob.outputs['DetermineResult.tobuild'], 'Yes'))
+  condition: and(succeeded(), eq(stageDependencies.GenerateCode.outputs['GenerateJob.DetermineResult.tobuild'], 'Yes'))
   jobs:
   - job: build
     steps:
@@ -135,7 +135,7 @@ stages:
   dependsOn:
   - GenerateCode
   - Build
-  condition: or(ne(stageDependencies.GenerateCode.GenerateJob.outputs['DetermineResult.tobuild'], 'Yes'), succeeded())
+  condition: and(in(dependencies.Build.result, 'Succeeded', 'SucceededWithIssues', 'Skipped'), succeeded('GenerateCode'))
   jobs:
   - job: DetermineSDKJob
     steps:
