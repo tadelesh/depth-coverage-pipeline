@@ -281,7 +281,7 @@ stages:
         # body=&(python scripts/onboard.py "Onboarding" "conboarding" "$codePR" "$triggerPR" "$submitURL" "$customizeURL")
         # echo "$body"
         
-        python scripts/onboard.py "Onboarding" "Onboarding $(ResourceProvider) confirm" "$codePR" "$triggerPR" "$submitURL" "$customizeURL" > scripts/email.html
+        python scripts/onboard.py "Onboarding" "$(TARGET) Onboarding $(ResourceProvider) confirm" "$codePR" "$triggerPR" "$submitURL" "$customizeURL" > scripts/email.html
         echo "start of email"
         cat scripts/email.html
         echo "end of email"
