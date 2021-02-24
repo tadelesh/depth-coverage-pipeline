@@ -19,5 +19,6 @@ steps:
     export AZURE_CLI_DISABLE_CONNECTION_VERIFICATION=1
     az --version
     az cloud register -n virtualCloud --endpoint-resource-manager "https://localhost:8443"
+    az cloud set -n virtualCloud
     sleep 3m
   displayName: 'setup cli mock env'
