@@ -6,7 +6,7 @@ steps:
     npm install
     . initiate.sh
     tsc
-    sudo node dist/src/main.js &
+    sudo node dist/src/main.js > ../mockserver.log &
     cd $(Pipeline.Workspace)/s
     ls -l
     ls -l avs/dist
