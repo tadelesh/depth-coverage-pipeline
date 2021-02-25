@@ -1,5 +1,6 @@
 steps:
 - bash: |
+    . venv/bin/activate
     az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
     git clone https://github.com/Azure/avs.git
     cd avs
@@ -14,7 +15,7 @@ steps:
     ls -l ./venv/lib/python*/site-packages/certifi/cacert.pem
     cat scripts/config/localhost_ca.crt >> ./venv/lib/python*/site-packages/certifi/cacert.pem
     ls -l ./venv/lib/python*/site-packages/certifi/cacert.pem
-    . venv/bin/activate
+    # . venv/bin/activate
     which python
     export AZURE_CLI_DISABLE_CONNECTION_VERIFICATION=1
     az --version
