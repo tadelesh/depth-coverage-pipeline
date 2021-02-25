@@ -1,4 +1,0 @@
-steps:
-- script: |
-    make acctests SERVICE=${ResourceProvider} TESTARGS=-run=TestAccAzureRM[a-zA-Z]+_basic TESTTIMEOUT='60m'
-  displayName: 'Test TF'

@@ -1,0 +1,4 @@
+steps:
+- script: |
+    make acctests SERVICE=${ResourceProvider} TESTARGS=-run=TestAcc[a-zA-Z]+_ci[a-zA-Z0-9]+ TESTTIMEOUT='60m'
+  displayName: 'Test TF'

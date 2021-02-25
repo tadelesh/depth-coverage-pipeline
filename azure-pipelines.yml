@@ -157,7 +157,7 @@ stages:
   - job: ClIMockTest
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
-    - script: echo 'MockTest'
+    - script: echo 'CLI MockTest'
     - template: .azure-pipelines/templates/SetupCliTestEnv.yml
     - template: .azure-pipelines/templates/SetupCliMockServerEnv.yml
     # - template: .azure-pipelines/templates/SetupCliTestEnv.yml
@@ -168,7 +168,10 @@ stages:
   - job: TFMockTest
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
-    - script: echo 'TFMockTest'
+    - script: echo 'TF MockTest'
+    - template: .azure-pipelines/templates/SetupTFTestEnv.yml
+    - template: .azure-pipelines/templates/SetupTFMockServerEnv.yml
+    - template: .azure-pipelines/templates/RunTFMockTest.yml
     displayName: TFIMockTest
     dependsOn: DetermineSDKJob
     condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'TF')
@@ -206,9 +209,10 @@ stages:
     condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'CLI')
   - job : TFLiveTest
     steps:
-    - bash: echo 'TFLiveTest'
+    - bash: echo 'TF LiveTest'
     - template: .azure-pipelines/templates/BeforeTask.yml
     - template: .azure-pipelines/templates/SetupTFTestEnv.yml
+    - template: .azure-pipelines/templates/RunTFLiveTest.yml
     displayName: TFLiveTest
     dependsOn: DetermineSDKForLiveJob
     condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'TF')

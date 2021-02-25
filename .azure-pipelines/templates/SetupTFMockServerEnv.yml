@@ -1,0 +1,8 @@
+steps:
+- template: SetupMockServer.yml
+- bash: |
+    # copy some hack file
+    cp scripts/TFMockServer/environments.go $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/Azure/go-autorest/autorest/azure/environments.go
+    cp scripts/TFMockServer/sender.go $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/hashicorp/go-azure-helpers/sender/sender.go
+    
+  displayName: 'setup terraform mock env'
