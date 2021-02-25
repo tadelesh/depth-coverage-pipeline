@@ -21,8 +21,10 @@ steps:
       cd $(Pipeline.Workspace)/s/azure-cli
       cli_existed_in_remote=$(git ls-remote --heads origin depth-$(TARGET)-$(ResourceProvider))
       if [[ -z ${cli_existed_in_remote} ]]; then
+        echo "create branch"
         git checkout -b depth-$(TARGET)-$(ResourceProvider)
       else
+        echo "checkout branch"
         git checkout depth-$(TARGET)-$(ResourceProvider)
       fi
     fi
