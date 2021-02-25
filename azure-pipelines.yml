@@ -161,7 +161,7 @@ stages:
     - template: .azure-pipelines/templates/SetupCliTestEnv.yml
     - template: .azure-pipelines/templates/SetupCliMockServerEnv.yml
     # - template: .azure-pipelines/templates/SetupCliTestEnv.yml
-    - template: .azure-pipelines/templates/RunCliTest.yml
+    - template: .azure-pipelines/templates/RunCliMockTest.yml
     displayName: CLIMockTest
     dependsOn: DetermineSDKJob
     condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'CLI')
