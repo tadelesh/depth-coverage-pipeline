@@ -19,7 +19,7 @@ steps:
     which python
     export AZURE_CLI_DISABLE_CONNECTION_VERIFICATION=1
     az --version
-    az cloud register -n virtualCloud --endpoint-resource-manager "https://localhost:8443"
+    az cloud register -n virtualCloud --endpoint-resource-manager "https://localhost:8443" --endpoint-active-directory https://login.microsoftonline.com --endpoint-active-directory-graph-resource-id https://graph.windows.net/ --endpoint-active-directory-resource-id https://management.core.windows.net/
     az cloud set -n virtualCloud
     sleep 3m
   displayName: 'setup cli mock env'
