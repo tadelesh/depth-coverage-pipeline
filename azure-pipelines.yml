@@ -275,8 +275,8 @@ stages:
         echo "$repo"
         echo "$org"
         echo "$base"
-        curl -X POST -H "Content-Type: application/json" http://codegenapp.azurewebsites.net/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"$org", "repo":"$repo", "title":"pull request of $(ResourceProvider)", "branch":"depth-$(TARGET)-$(ResourceProvider)", "base":"$base"}'
-        codePR=`curl -X POST -H "Content-Type: application/json" http://codegenapp.azurewebsites.net/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"$org", "repo":"$repo", "title":"pull request of $(ResourceProvider)", "branch":"depth-$(TARGET)-$(ResourceProvider)", "base":"$base"}'`
+        # curl -X POST -H "Content-Type: application/json" http://codegenapp.azurewebsites.net/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"$org", "repo":"$repo", "title":"[]pull request of $(ResourceProvider)", "branch":"depth-$(TARGET)-$(ResourceProvider)", "base":"$base"}'
+        codePR=`curl -X POST -H "Content-Type: application/json" http://codegenapp.azurewebsites.net/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"$org", "repo":"$repo", "title":"[depth coverage, not merge]pull request of $(ResourceProvider)", "branch":"depth-$(TARGET)-$(ResourceProvider)", "base":"$base"}'`
         echo $codePR
         # codePRNumber=22
         # codePR="https://github.com/Azure/depth-coverage-pipeline/pull/$codePRNumber"
