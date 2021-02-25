@@ -1,8 +1,15 @@
 steps:
-- template: SetupMockServer.yml
 - bash: |
     # copy some hack file
     cp scripts/TFMockServer/environments.go $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/Azure/go-autorest/autorest/azure/environments.go
     cp scripts/TFMockServer/sender.go $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/hashicorp/go-azure-helpers/sender/sender.go
-    
   displayName: 'setup terraform mock env'
+- bash: |
+    az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
+    git clone https://github.com/Azure/avs.git
+    cd avs
+    npm install
+    . initiate.sh
+    tsc
+    sudo node dist/src/main.js > ../mockserver.log &
+  displayName: 'setup mock server'
