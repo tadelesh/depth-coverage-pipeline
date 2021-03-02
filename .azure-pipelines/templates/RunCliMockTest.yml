@@ -6,7 +6,7 @@ steps:
     az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
     # az vm show --name MyVm --resource-group MyResourceGroup --debug
     export AZURE_TEST_RUN_LIVE=true
-    pytest -rA ./azure-cli/src/azure-cli/azure/cli/command_modules/vm/tests/cmdlet/test_positive.py
+    pytest -rA ./azure-cli/src/azure-cli/azure/cli/command_modules/$(Package)/tests/cmdlet/test_positive.py
 
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: CLI Test failed"

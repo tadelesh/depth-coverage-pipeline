@@ -72,17 +72,22 @@ stages:
         Write-Host "##vso[task.setvariable variable=README_FILE]$readmefile"
         Write-Host "##vso[task.setvariable variable=TARGET]$target"
         $af=""
+        $packagename=""
         if($target -eq "terraform") {
           $af="generated/$name ./go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/Azure/azure-sdk-for-go/services/$name"
+          $packagename=$name
         } else {
           if($name -eq "compute") {
             $af="./azure-cli/src/azure-cli/azure/cli/command_modules/vm ./azure-cli/src/azure-cli/requirements*.txt ./azure-cli/doc/sphinx/azhelpgen/doc_source_map.json ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md"
+            $packagename="vm"
           } else {
             $af="./azure-cli/src/azure-cli/azure/cli/command_modules/$name ./azure-cli/src/azure-cli/requirements*.txt ./azure-cli/doc/sphinx/azhelpgen/doc_source_map.json ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md"
+            $packagename=$name
           }
         }
         echo $af
         Write-Host "##vso[task.setvariable variable=Artifcact]$af"
+        Write-Host "##vso[task.setvariable variable=Package]$packagename"
 
         Write-Host "##vso[task.setvariable variable=ignore;isOutput=true]$ignore TestFailure"
         Write-Host "##vso[task.setvariable variable=excludestages;isOutput=true]$excludedStages"
