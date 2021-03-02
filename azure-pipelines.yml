@@ -27,7 +27,7 @@ variables:
 - name: README_FILE
   value: ""
 - name: TARGET
-  value: CLI
+  value: clicore
 - name: AlertInstruction
   value: ""
 - name: NotifyUsers
@@ -72,7 +72,7 @@ stages:
         Write-Host "##vso[task.setvariable variable=README_FILE]$readmefile"
         Write-Host "##vso[task.setvariable variable=TARGET]$target"
         $af=""
-        if($target -eq "TF") {
+        if($target -eq "terraform") {
           $af="generated/$name ./go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/Azure/azure-sdk-for-go/services/$name"
         } else {
           if($name -eq "compute") {
@@ -115,7 +115,7 @@ stages:
     - template: .azure-pipelines/templates/GenerateCode.yml
     - bash: |
         sdktarget=$(TARGET)
-        if [ "$sdktarget" == "TF" ]; then
+        if [ "$sdktarget" == "terraform" ]; then
           echo "##vso[task.setvariable variable=tobuild;isOutput=true]Yes"
         else
           echo "##vso[task.setvariable variable=tobuild;isOutput=true]No"
@@ -134,7 +134,7 @@ stages:
     - template: .azure-pipelines/templates/BuildTF.yml
   - job: alertIssue
     dependsOn: build
-    condition: and(failed(),eq(variables['TARGET'], 'TF'))
+    condition: and(failed(),eq(variables['TARGET'], 'terraform'))
     steps:
     - template: .azure-pipelines/templates/IssueAlertTask.yml
 - stage: MockTest
@@ -148,10 +148,10 @@ stages:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - bash: |
         sdktarget=$(TARGET)
-        if [ "$sdktarget" == "TF" ]; then
-          echo "##vso[task.setvariable variable=sdk;isOutput=true]TF"
+        if [ "$sdktarget" == "terraform" ]; then
+          echo "##vso[task.setvariable variable=sdk;isOutput=true]terraform"
         else
-          echo "##vso[task.setvariable variable=sdk;isOutput=true]CLI"
+          echo "##vso[task.setvariable variable=sdk;isOutput=true]cli"
         fi
       name: determineSDK
   - job: ClIMockTest
@@ -164,7 +164,7 @@ stages:
     - template: .azure-pipelines/templates/RunCliMockTest.yml
     displayName: CLIMockTest
     dependsOn: DetermineSDKJob
-    condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'CLI')
+    condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'cli')
   - job: TFMockTest
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
@@ -174,12 +174,12 @@ stages:
     - template: .azure-pipelines/templates/RunTFMockTest.yml
     displayName: TFIMockTest
     dependsOn: DetermineSDKJob
-    condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'TF')
+    condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'terraform')
   - job: alertIssue
     dependsOn:
     - CLIMockTest
     - TFMockTest
-    condition: or(and(eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'CLI'), failed('ClIMockTest')), and(eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'TF'), failed('TFMockTest')))
+    condition: or(and(eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'cli'), failed('ClIMockTest')), and(eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'terraform'), failed('TFMockTest')))
     steps:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - template: .azure-pipelines/templates/IssueAlertTask.yml
@@ -192,10 +192,10 @@ stages:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - bash: |
         sdktarget=$(TARGET)
-        if [ "$sdktarget" == "TF" ]; then
-          echo "##vso[task.setvariable variable=sdk;isOutput=true]TF"
+        if [ "$sdktarget" == "terraform" ]; then
+          echo "##vso[task.setvariable variable=sdk;isOutput=true]terraform"
         else
-          echo "##vso[task.setvariable variable=sdk;isOutput=true]CLI"
+          echo "##vso[task.setvariable variable=sdk;isOutput=true]cli"
         fi
       name: liveSDK
   - job: CLILiveTest
@@ -206,7 +206,7 @@ stages:
     - template: .azure-pipelines/templates/RunCliTest.yml
     displayName: CLILiveTest
     dependsOn: DetermineSDKForLiveJob
-    condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'CLI')
+    condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'cli')
   - job : TFLiveTest
     steps:
     - bash: echo 'TF LiveTest'
@@ -215,12 +215,12 @@ stages:
     - template: .azure-pipelines/templates/RunTFLiveTest.yml
     displayName: TFLiveTest
     dependsOn: DetermineSDKForLiveJob
-    condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'TF')
+    condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'terraform')
   - job: alertIssue
     dependsOn:
     - CLILiveTest
     - TFLiveTest
-    condition: or(and(eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'CLI'), failed('ClIMockTest')), and(eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'TF'), failed('TFMockTest')))
+    condition: or(and(eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'cli'), failed('ClIMockTest')), and(eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'terraform'), failed('TFMockTest')))
     steps:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - template: .azure-pipelines/templates/IssueAlertTask.yml
@@ -239,12 +239,12 @@ stages:
 
         echo "https://$(PIPELINE_USER):${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
         sdktarget=$(TARGET)
-        if [ "$sdktarget" == "TF" ]; then
+        if [ "$sdktarget" == "terraform" ]; then
           git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/microsoft/terraform-provider-azurerm.git
           cd ./terraform-provider-azurerm
         fi
 
-        if [ "$sdktarget" == "CLI-core" ] || [ "$sdktarget" == "CLI-extension" ]; then
+        if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
           git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/Azure/azure-cli
           cd ./azure-cli
         fi
@@ -262,7 +262,7 @@ stages:
         echo "https://$(PIPELINE_USER):${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
         git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/Azure/azure-rest-api-specs.git
         sdktarget=$(TARGET)
-        if [ "$sdktarget" == "TF" ]; then
+        if [ "$sdktarget" == "terraform" ]; then
           git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/microsoft/terraform-provider-azurerm.git
           cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.trenton.md ./terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/
           cd ./terraform-provider-azurerm
@@ -275,7 +275,7 @@ stages:
           fi
         fi
 
-        if [ "$sdktarget" == "CLI-core" ] || [ "$sdktarget" == "CLI-extension" ]; then
+        if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
           git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/Azure/azure-cli
           name=$(ResourceProvider)
           if [ "$name" == "compute" ]; then 
@@ -307,15 +307,15 @@ stages:
         repo=""
         base="master"
         sdk="";
-        if [ "$sdktarget" == "TF" ]; then
+        if [ "$sdktarget" == "terraform" ]; then
           org="microsoft"
           repo="terraform-provider-azurerm"
-          sdk="TF"
+          sdk="terraform"
         else
           org="Azure"
           repo="azure-cli"
           base="dev"
-          sdk="cli-core"
+          sdk="clicore"
         fi
         echo "$repo"
         echo "$org"

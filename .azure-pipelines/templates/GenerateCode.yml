@@ -2,7 +2,7 @@ steps:
 - script: |
     echo "https://$(PIPELINE_USER):${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
     sdktarget=$(TARGET)
-    if [ "$sdktarget" == "TF" ]; then
+    if [ "$sdktarget" == "terraform" ]; then
       cd $(Pipeline.Workspace)/s
       git clone --branch pipeline https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/microsoft/terraform-provider-azurerm.git
       cd $(Pipeline.Workspace)/s/terraform-provider-azurerm
@@ -15,7 +15,7 @@ steps:
       fi
     fi
 
-    if [ "$sdktarget" == "CLI-core" ] || [ "$sdktarget" == "CLI-extension" ]; then
+    if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
       cd $(Pipeline.Workspace)/s
       git clone https://github.com/Azure/azure-cli
       cd $(Pipeline.Workspace)/s/azure-cli
@@ -51,13 +51,13 @@ steps:
     pwd
     ls -l
     sdktarget=$(TARGET)
-    if [ "$sdktarget" == "TF" ]; then
+    if [ "$sdktarget" == "terraform" ]; then
       echo 'workOnTF'
       sudo npm install -g metadata-tool
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
     fi
 
-    if [ "$sdktarget" == "CLI-core" ] || [ "$sdktarget" == "CLI-extension" ]; then
+    if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
       echo 'workonCLI'
       sudo npm install -g depthcoverage --unsafe-perm=true --allow-root
       sudo npm install -g autorest-autoconfig
@@ -67,7 +67,7 @@ steps:
       echo "./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.md"
       echo "./azure-rest-api-specs/$(README_FILE)"
       # autorest --version=3.0.6271 --use=autorest-autoconfig@latest ./azure-rest-api-specs/$(README_FILE) --resource-file=./$(RESOURCE_MAP_FILE)
-      autorest --version=3.0.6271 --use=autorest-autoconfig@latest ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.md --resource-file=./$(RESOURCE_MAP_FILE)
+      autorest --version=3.0.6271 --use=autorest-autoconfig@latest --target-mode=core ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.md --resource-file=./$(RESOURCE_MAP_FILE)
       ls -l ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager
       cat ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md
 
@@ -83,7 +83,7 @@ steps:
     echo $pwd
     pwd
     sdktarget=$(TARGET)
-    if [ "$sdktarget" == "TF" ]; then
+    if [ "$sdktarget" == "terraform" ]; then
       echo "start tf code"
       mkdir generated
       autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-mockserver-test.tgz --generate-extra-acctest=true --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
@@ -94,7 +94,7 @@ steps:
       fi
     fi
 
-    if [ "$sdktarget" == "CLI-core" ] || [ "$sdktarget" == "CLI-extension" ]; then
+    if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
       cat ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md
       echo "end cat" 
       # autorest --version=3.0.6271 --az --use=@autorest/az@latest ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli  --target-mode=core
