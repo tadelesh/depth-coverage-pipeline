@@ -4,7 +4,7 @@ steps:
     sdktarget=$(TARGET)
     if [ "$sdktarget" == "terraform" ]; then
       cd $(Pipeline.Workspace)/s
-      git clone --branch pipeline https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/microsoft/terraform-provider-azurerm.git
+      git clone --branch pipeline https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/${TF_ORG}/terraform-provider-azurerm.git
       cd $(Pipeline.Workspace)/s/terraform-provider-azurerm
       # git checkout -b depth-$(TARGET)-$(ResourceProvider)
       tf_existed_in_remote=$(git ls-remote --heads origin depth-$(TARGET)-$(ResourceProvider))
@@ -17,7 +17,7 @@ steps:
 
     if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
       cd $(Pipeline.Workspace)/s
-      git clone https://github.com/Azure/azure-cli
+      git clone https://github.com/${CLI_ORG}/azure-cli
       cd $(Pipeline.Workspace)/s/azure-cli
       cli_existed_in_remote=$(git ls-remote --heads origin depth-$(TARGET)-$(ResourceProvider))
       if [[ -z ${cli_existed_in_remote} ]]; then
@@ -30,7 +30,7 @@ steps:
     fi
 
     cd $(Pipeline.Workspace)/s
-    git clone https://github.com/Azure/azure-rest-api-specs.git
+    git clone https://github.com/${Swagger_ORG}/azure-rest-api-specs.git
     ls -l
     cd $(Pipeline.Workspace)/s/azure-rest-api-specs
     ls -l

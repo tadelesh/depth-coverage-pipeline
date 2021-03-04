@@ -245,12 +245,12 @@ stages:
         echo "https://$(PIPELINE_USER):${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
         sdktarget=$(TARGET)
         if [ "$sdktarget" == "terraform" ]; then
-          git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/microsoft/terraform-provider-azurerm.git
+          git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/${TF_ORG}/terraform-provider-azurerm.git
           cd ./terraform-provider-azurerm
         fi
 
         if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
-          git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/Azure/azure-cli
+          git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/${CLI_ORG}/azure-cli
           cd ./azure-cli
         fi
 
@@ -265,10 +265,10 @@ stages:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - bash: |
         echo "https://$(PIPELINE_USER):${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
-        git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/Azure/azure-rest-api-specs.git
+        git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/${Swagger_ORG}/azure-rest-api-specs.git
         sdktarget=$(TARGET)
         if [ "$sdktarget" == "terraform" ]; then
-          git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/microsoft/terraform-provider-azurerm.git
+          git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/${TF_ORG}/terraform-provider-azurerm.git
           cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.trenton.md ./terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/
           cd ./terraform-provider-azurerm
           # git checkout -b depth-code-$(TARGET)-$(ResourceProvider)
@@ -281,7 +281,7 @@ stages:
         fi
 
         if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
-          git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/Azure/azure-cli
+          git clone --branch depth-$(TARGET)-$(ResourceProvider) https://github.com/${CLI_ORG}/azure-cli
           name=$(ResourceProvider)
           if [ "$name" == "compute" ]; then 
             name="vm"
@@ -313,11 +313,11 @@ stages:
         base="master"
         sdk="";
         if [ "$sdktarget" == "terraform" ]; then
-          org="microsoft"
+          org=$(TF_ORG)
           repo="terraform-provider-azurerm"
           sdk="terraform"
         else
-          org="Azure"
+          org=$(CLI_ORG)
           repo="azure-cli"
           base="dev"
           sdk="clicore"
