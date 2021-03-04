@@ -1,5 +1,6 @@
 steps:
 - script: |
+    echo "on dev env"
     echo "https://$(PIPELINE_USER):${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
     sdktarget=$(TARGET)
     if [ "$sdktarget" == "terraform" ]; then
@@ -30,7 +31,8 @@ steps:
     fi
 
     cd $(Pipeline.Workspace)/s
-    git clone https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/${Swagger_ORG}/azure-rest-api-specs.git
+    echo "$(Swagger_ORG)"
+    git clone https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/$(Swagger_ORG)/azure-rest-api-specs.git
     ls -l
     cd $(Pipeline.Workspace)/s/azure-rest-api-specs
     ls -l
