@@ -17,8 +17,12 @@ steps:
     af=$(cat $(Pipeline.Workspace)/variables/Artifact)
     echo "##vso[task.setvariable variable=Artifact]$af"
 
+    package=$(cat $(Pipeline.Workspace)/variables/Package)
+    echo "##vso[task.setvariable variable=Package]$package"
+
     echo $ResourceProvider
     echo $target
     echo $af
+    echo $package
     echo 'end' 
   displayName: 'set variable'

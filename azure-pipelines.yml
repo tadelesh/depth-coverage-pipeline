@@ -101,7 +101,8 @@ stages:
         echo "$(README_FILE)" > $(Pipeline.Workspace)/variables/README_FILE
         echo "$(TARGET)" > $(Pipeline.Workspace)/variables/TARGET
         echo "$(Artifcact)" > $(Pipeline.Workspace)/variables/Artifact
-
+        echo "$(Package)" > $(Pipeline.Workspace)/variables/Package
+        
         echo ""
         ls -l $(Pipeline.Workspace)/variables
       displayName: "publish variable"
