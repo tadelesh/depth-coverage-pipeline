@@ -313,15 +313,18 @@ stages:
         repo=""
         base="master"
         sdk="";
+        to_mail="";
         if [ "$sdktarget" == "terraform" ]; then
           org="microsoft"
           repo="terraform-provider-azurerm"
           sdk="terraform"
+          to_mail="tfazengvsc@microsoft.com"
         else
           org="Azure"
           repo="azure-cli"
           base="dev"
           sdk="clicore"
+          to_mail="AzCLIInternal@microsoft.com"
         fi
         echo "$repo"
         echo "$org"
@@ -342,7 +345,7 @@ stages:
         echo "start of email"
         cat scripts/email.html
         echo "end of email"
-        to_mail="chunyu@microsoft.com"
+        # to_mail="chunyu@microsoft.com"
         
         sudo pip install wheel
         sudo pip install sendgrid
