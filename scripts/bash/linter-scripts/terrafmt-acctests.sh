@@ -2,7 +2,7 @@
 
 echo "==> Checking acceptance test terraform blocks are formatted..."
 
-files=$(find ./azurerm/internal/services/$(ResourceProvider) -type f -name "*_test.go")
+files=$(find ./azurerm/internal/services/$RP -type f -name "*_test.go")
 error=false
 
 for f in $files; do
