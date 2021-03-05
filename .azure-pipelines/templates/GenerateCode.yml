@@ -53,7 +53,7 @@ steps:
     sdktarget=$(TARGET)
     if [ "$sdktarget" == "terraform" ]; then
       echo 'workOnTF'
-      sudo npm install -g metadata-tool
+      sudo npm install -g metadata-tool@3.0.5
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
     fi
 
