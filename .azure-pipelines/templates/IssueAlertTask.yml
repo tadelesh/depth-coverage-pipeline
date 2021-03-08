@@ -1,11 +1,12 @@
 steps:
 - script: |
     codePRNumber=22
-    codePR="https://github.com/Azure/depth-coverage-pipeline/pull/$codePRNumber"
-    triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
+    logurl="https://depthcoverage.blob.core.windows.net/depthcoverage/log/$(TARGET)-$(ResourceProvider)-$(Build.BuildId)-*.log"
+    codePR="https://github.com/${PIPELINE_ORG}/depth-coverage-pipeline/pull/$codePRNumber"
+    triggerPR="https://github.com/${PIPELINE_ORG}/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
     resolveURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Resolve"
         
-    python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
+    python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$logurl" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
     echo "start of email"
     cat scripts/email.html
     echo "end of email"

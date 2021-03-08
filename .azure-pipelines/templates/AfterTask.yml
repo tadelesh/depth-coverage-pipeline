@@ -22,12 +22,12 @@ steps:
 
     # sdktarget=$(TARGET)
     # if [ "$sdktarget" == "terraform" ]; then
-    #   git clone --branch pipeline https://github.com/microsoft/terraform-provider-azurerm.git
+    #   git clone --branch pipeline https://github.com/$(TF_ORG)/terraform-provider-azurerm.git
     #   cd ./terraform-provider-azurerm
     # fi
 
     # if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
-    #   git clone https://github.com/Azure/azure-cli
+    #   git clone https://github.com/$(CLI_ORG)/azure-cli
     #   cd ./azure-cli
     # fi
 

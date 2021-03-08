@@ -1,10 +1,11 @@
 steps:
 - script: |
+    echo "on dev env"
     echo "https://$(PIPELINE_USER):${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
     sdktarget=$(TARGET)
     if [ "$sdktarget" == "terraform" ]; then
       cd $(Pipeline.Workspace)/s
-      git clone --branch pipeline https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/microsoft/terraform-provider-azurerm.git
+      git clone --branch pipeline https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/${TF_ORG}/terraform-provider-azurerm.git
       cd $(Pipeline.Workspace)/s/terraform-provider-azurerm
       # git checkout -b depth-$(TARGET)-$(ResourceProvider)
       tf_existed_in_remote=$(git ls-remote --heads origin depth-$(TARGET)-$(ResourceProvider))
@@ -17,7 +18,7 @@ steps:
 
     if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
       cd $(Pipeline.Workspace)/s
-      git clone https://github.com/Azure/azure-cli
+      git clone https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/${CLI_ORG}/azure-cli
       cd $(Pipeline.Workspace)/s/azure-cli
       cli_existed_in_remote=$(git ls-remote --heads origin depth-$(TARGET)-$(ResourceProvider))
       if [[ -z ${cli_existed_in_remote} ]]; then
@@ -30,7 +31,8 @@ steps:
     fi
 
     cd $(Pipeline.Workspace)/s
-    git clone https://github.com/Azure/azure-rest-api-specs.git
+    echo "$(Swagger_ORG)"
+    git clone https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/$(Swagger_ORG)/azure-rest-api-specs.git
     ls -l
     cd $(Pipeline.Workspace)/s/azure-rest-api-specs
     ls -l
@@ -86,10 +88,13 @@ steps:
     if [ "$sdktarget" == "terraform" ]; then
       echo "start tf code"
       mkdir generated
-      autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-mockserver-test.tgz --generate-extra-acctest=true --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE)
-      ls -l generated/$(ResourceProvider)
+      autorest --version=3.0.6219 --trenton --use=https://trenton.blob.core.windows.net/trenton/autorest-trenton-mockserver-test.tgz --generate-extra-acctest=true --trenton-output-folder=./generated ./azure-rest-api-specs/$(README_FILE) > ../codegen.log
+      
       if [ "$?" != "0" ]; then
         echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Generate code failed"
+        # upload error log
+        az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
+        az storage blob upload -c depthcoverage -f ../codegen.log -n log/$(TARGET)-$(ResourceProvider)-$(Build.BuildId)-codegen.log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
         exit 1
       fi
     fi

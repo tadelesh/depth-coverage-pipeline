@@ -16,7 +16,7 @@ steps:
     git clone https://github.com/Azure/azure-rest-api-specs.git
     mkdir -p ./go/src/github.com/terraform-providers
     cd ./go/src/github.com/terraform-providers
-    git clone --branch pipeline https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/microsoft/terraform-provider-azurerm.git
+    git clone --branch pipeline https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/${TF_ORG}/terraform-provider-azurerm.git
     echo "https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
     cd terraform-provider-azurerm
     export GOPATH=/home/vsts/work/1/s/go
@@ -119,9 +119,13 @@ steps:
     export GOPATH=/home/vsts/work/1/s/go
     export PATH=$PATH:$GOPATH/bin
     export RP=$(ResourceProvider)
-    bash ./scripts/bash/compile.sh
+    bash ./scripts/bash/compile.sh > ../build.log
+    
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Compile Generated code failed"
+      # upload error log
+      az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
+      az storage blob upload -c depthcoverage -f ../build.log -n log/$(TARGET)-$(ResourceProvider)-$(Build.BuildId)-build.log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
       exit 1
     fi
 
