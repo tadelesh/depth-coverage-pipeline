@@ -54,7 +54,6 @@ stages:
         $jsonfile=$env:RESOURCE_MAP_FILE
         echo $jsonfile
         $data = Get-content $jsonfile | ConvertFrom-Json
-        echo $data
         $name=$data.RPName
         
         $readmefile=$data.readmeFile
@@ -63,7 +62,7 @@ stages:
         $ignore=$data.ignoreFailures
         $excludeStages=$data.excludeStages
 
-        echo $target
+        echo "target: $target"
         Write-Host "##vso[task.setvariable variable=ResourceProvider]$name"
         Write-Host "##vso[task.setvariable variable=README_FILE]$readmefile"
         Write-Host "##vso[task.setvariable variable=TARGET]$target"
@@ -81,7 +80,7 @@ stages:
             $packagename=$name
           }
         }
-        echo $af
+        echo "artifat:$af"
         Write-Host "##vso[task.setvariable variable=Artifcact]$af"
         Write-Host "##vso[task.setvariable variable=Package]$packagename"
 
@@ -262,7 +261,7 @@ stages:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - bash: |
         echo "https://$(PIPELINE_USER):${PIPELINE_TOKEN}@github.com" > ~/.git-credentials
-        git clone --branch depth-$(TARGET)-$(ResourceProvider) https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/${Swagger_ORG}/azure-rest-api-specs.git
+        git clone --branch depth-$(TARGET)-$(ResourceProvider) https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/$(Swagger_ORG)/azure-rest-api-specs.git
         sdktarget=$(TARGET)
         if [ "$sdktarget" == "terraform" ]; then
           git clone --branch depth-$(TARGET)-$(ResourceProvider) https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/${TF_ORG}/terraform-provider-azurerm.git
@@ -322,13 +321,13 @@ stages:
           sdk="clicore"
           to_mail="AzCLIInternal@microsoft.com"
         fi
-        echo "$repo"
-        echo "$org"
-        echo "$base"
+        echo "repo: $repo"
+        echo "org；$org"
+        echo "base brach: $base"
         # curl -X POST -H "Content-Type: application/json" http://$(CodegenApp_Server)/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"$org", "repo":"$repo", "title":"[]pull request of $(ResourceProvider)", "branch":"depth-$(TARGET)-$(ResourceProvider)", "base":"$base"}'
         # codePR=`curl -X POST -H "Content-Type: application/json" http://$(CodegenApp_Server)/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"$(org)", "repo":"$(repo)", "title":"{depth coverage, not merge} pull request of $(ResourceProvider)", "branch":"depth-$(TARGET)-$(ResourceProvider)", "base":"$(base)"}'`
         codePR=$(curl -X POST -H "Content-Type: application/json" http://$(CodegenApp_Server)/DepthCoverage/generateCodePR -d '{"token":"$(PIPELINE_TOKEN)", "org":"'"$org"'", "repo":"'"$repo"'", "title":"{depth coverage, not merge} pull request of $(ResourceProvider)", "branch":"depth-code-$(TARGET)-$(ResourceProvider)", "base":"'"$base"'"}')
-        echo $codePR
+        # echo $codePR
 
         triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
         submitURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/submit?token=$(PIPELINE_TOKEN)&swaggerorg=$(Swagger_ORG)&org=$org"
