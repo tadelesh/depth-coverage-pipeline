@@ -45,14 +45,13 @@ steps:
     cp ./scripts/bash/linter-scripts/*.sh ./go/src/github.com/terraform-providers/terraform-provider-azurerm/scripts/
 
     cp -r ./generated/* ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/
-    echo "$(ResourceProvider)"
-    ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)
-    echo 'end of ls'
+    # echo "$(ResourceProvider)"
+    # ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)
+
     cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
     echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go."
 
     CLIENT_IMPORT=`cat azurerm/internal/services/$(ResourceProvider)/trenton-configuration/configuration_client | sed -n 1p`
-    echo "${CLIENT_IMPORT}"
     CLIENT_STRUCT=`cat azurerm/internal/services/$(ResourceProvider)/trenton-configuration/configuration_client | sed -n 2p`
     CLIENT_NEW=`cat azurerm/internal/services/$(ResourceProvider)/trenton-configuration/configuration_client | sed -n 3p`
     CLIENT_IMPORT_ORI="web \"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\/client\""
@@ -66,16 +65,12 @@ steps:
 
     cat azurerm/internal/clients/client.go | grep -q "/$(ResourceProvider)/"|echo $?
     if cat azurerm/internal/clients/client.go | grep -q "/$(ResourceProvider)/"; then
-      echo "find $(ResourceProvider)"
       cat azurerm/internal/clients/client.go | grep "/$(ResourceProvider)/"
       PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/$(ResourceProvider)/" | awk '{print $1}'`
-      echo "${PACKAGE_NAME_ORI}"
-      echo "end"
       sed -i "s|^.*${PACKAGE_NAME_ORI} \"github.*$|${CLIENT_IMPORT}|" azurerm/internal/clients/client.go
       sed -i "s/^.*\*${PACKAGE_NAME_ORI}\.Client.*$/${CLIENT_STRUCT}/" azurerm/internal/clients/client.go
       sed -i "s/^.*${PACKAGE_NAME_ORI}\.NewClient(o).*$/${CLIENT_NEW}/" azurerm/internal/clients/client.go
     else
-      echo "not find $(ResourceProvider)"
       sed -i "/$CLIENT_IMPORT_ORI/a $CLIENT_IMPORT" azurerm/internal/clients/client.go
       sed -i "/$CLIENT_STRUCT_ORI/a $CLIENT_STRUCT" azurerm/internal/clients/client.go
       sed -i "/$CLIENT_NEW_ORI/a $CLIENT_NEW" azurerm/internal/clients/client.go
@@ -97,9 +92,7 @@ steps:
     # move doc
     # cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
     pwd
-    echo "$(Pipeline.Workspace)"
     ls -l /home/vsts/work/1/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/website/docs/d/
-    echo "end of wesit list"
     mv $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/website/docs/d/* $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/
     mv $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/website/docs/r/* $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/website/docs/d/
 
