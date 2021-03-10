@@ -64,7 +64,7 @@ steps:
       sudo npm install -g autorest-autoconfig
       depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=read --PRNumber=$(System.PullRequest.PullRequestNumber)
       ls -l
-      FILE=$(Pipeline.Workspace)/s/readme.az.md
+      FILE=$(Pipeline.Workspace)/s/specification/$(ResourceProvider)/resource-manager/readme.az.md
       if [ -f "$FILE" ]; then
         echo "$FILE exists."
         cp "$FILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md
