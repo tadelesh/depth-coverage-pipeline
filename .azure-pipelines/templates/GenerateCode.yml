@@ -35,12 +35,13 @@ steps:
     cd $(Pipeline.Workspace)/s/azure-rest-api-specs
     ls -l
     spec_existed_in_remote=$(git ls-remote --heads origin depth-$(TARGET)-$(ResourceProvider))
-      if [[ -z ${spec_existed_in_remote} ]]; then
-        git checkout -b depth-$(TARGET)-$(ResourceProvider)
-      else
-        git checkout depth-$(TARGET)-$(ResourceProvider)
-      fi
+    if [[ -z ${spec_existed_in_remote} ]]; then
+      git checkout -b depth-$(TARGET)-$(ResourceProvider)
+    else
+      git checkout depth-$(TARGET)-$(ResourceProvider)
+    fi
     git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
+    git pull origin depth-$(TARGET)-$(ResourceProvider)
     cd $(Pipeline.Workspace)/s
   displayName: 'pull repo'
 - script: |
