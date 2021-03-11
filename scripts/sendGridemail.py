@@ -12,7 +12,7 @@ parser.add_argument("api_key", help="sendgrid api key")
 args = parser.parse_args()
 
 from_email = 'codegen@azure-devex-tools.com'
-to_emails = args.email.split('_')
+to_emails = args.email.split(';')
 subject = args.subject
 f = codecs.open(args.contentfile, 'r')
 html_content = f.read()

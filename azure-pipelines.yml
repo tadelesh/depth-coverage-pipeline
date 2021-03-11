@@ -45,7 +45,8 @@ stages:
         sudo apt-get install jq -y
       displayName: 'prepare'
     - script: |
-        depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=$(System.PullRequest.PullRequestNumber)
+        depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=read --PRNumber=$(System.PullRequest.PullRequestNumber)
+        ls -l
         # rp=`jq .RPName $(RESOURCE_MAP_FILE)`
         # echo $rp
         # echo '##vso[task.setvariable variable=ResourceProvider]$rp'
@@ -339,6 +340,11 @@ stages:
         cat scripts/email.html
         echo "end of email"
         # to_mail="chunyu@microsoft.com"
+        plateform=$(PLATEFORM)
+        echo "plateform: $plateform"
+        if [ "$plateform" == "dev" ]; then
+          to_mail += ";chunyu@microsoft.com"
+        fi
         
         sudo pip install wheel
         sudo pip install sendgrid
