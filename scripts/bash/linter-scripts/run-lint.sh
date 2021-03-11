@@ -2,7 +2,7 @@
 
 function runLinters {
   echo "==> Checking source code against linters..."
-  golangci-lint run ./azurerm/internal/services/$(ResourceProvider)/...
+  golangci-lint run ./azurerm/internal/services/$RP/...
 }
 
 function main {
