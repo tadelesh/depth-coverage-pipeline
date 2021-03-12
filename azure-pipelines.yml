@@ -39,13 +39,16 @@ stages:
   #   - script: |
   #       curl -X GET http://10.172.15.142:3000
   - job: config
+    variables:
+      TASK_KEY: config
     steps:
     - script: |
         sudo npm install -g depthcoverage --unsafe-perm=true --allow-root
         sudo apt-get install jq -y
       displayName: 'prepare'
     - script: |
-        depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=readPR --PRNumber=$(System.PullRequest.PullRequestNumber)
+        depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=read --PRNumber=$(System.PullRequest.PullRequestNumber)
+        ls -l
         # rp=`jq .RPName $(RESOURCE_MAP_FILE)`
         # echo $rp
         # echo '##vso[task.setvariable variable=ResourceProvider]$rp'
@@ -111,6 +114,8 @@ stages:
   condition: succeeded()
   jobs:
   - job: GenerateJob
+    variables:
+      TASK_KEY: GenerateCode
     steps:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - template: .azure-pipelines/templates/GenerateCode.yml
@@ -123,19 +128,24 @@ stages:
         fi
       displayName: "set output variable"
       name: DetermineResult
+    - template: .azure-pipelines/templates/UploadCode.yml
     - template: .azure-pipelines/templates/AfterTask.yml
 - stage: Build
   dependsOn: GenerateCode
   condition: and(succeeded(), eq(stageDependencies.GenerateCode.outputs['GenerateJob.DetermineResult.tobuild'], 'Yes'))
   jobs:
   - job: build
+    variables:
+      TASK_KEY: build
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
     - script: echo 'build'
     - template: .azure-pipelines/templates/BuildTF.yml
+    - template: .azure-pipelines/templates/IssueAlertTask.yml
+    - template: .azure-pipelines/templates/AfterTask.yml
   - job: alertIssue
     dependsOn: build
-    condition: and(failed(),eq(variables['TARGET'], 'terraform'))
+    condition: and(failed(), eq(stageDependencies.GenerateCode.outputs['GenerateJob.DetermineResult.tobuild'], 'Yes'))
     steps:
     - template: .azure-pipelines/templates/IssueAlertTask.yml
 - stage: MockTest
@@ -156,6 +166,8 @@ stages:
         fi
       name: determineSDK
   - job: ClIMockTest
+    variables:
+      TASK_KEY: CLIMockTest
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
     - script: echo 'CLI MockTest'
@@ -163,16 +175,20 @@ stages:
     - template: .azure-pipelines/templates/SetupCliMockServerEnv.yml
     # - template: .azure-pipelines/templates/SetupCliTestEnv.yml
     - template: .azure-pipelines/templates/RunCliMockTest.yml
+    - template: .azure-pipelines/templates/AfterTask.yml
     displayName: CLIMockTest
     dependsOn: DetermineSDKJob
     condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'cli')
   - job: TFMockTest
+    variables:
+      TASK_KEY: TFMockTest
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
     - script: echo 'TF MockTest'
     - template: .azure-pipelines/templates/SetupTFTestEnv.yml
     - template: .azure-pipelines/templates/SetupTFMockServerEnv.yml
     - template: .azure-pipelines/templates/RunTFMockTest.yml
+    - template: .azure-pipelines/templates/AfterTask.yml
     displayName: TFIMockTest
     dependsOn: DetermineSDKJob
     condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'terraform')
@@ -200,20 +216,26 @@ stages:
         fi
       name: liveSDK
   - job: CLILiveTest
+    variables:
+      TASK_KEY: CLILiveTest
     steps:
     - script: echo 'CLILiveTest'
     - template: .azure-pipelines/templates/BeforeTask.yml
     - template: .azure-pipelines/templates/SetupCliTestEnv.yml
     - template: .azure-pipelines/templates/RunCliTest.yml
+    - template: .azure-pipelines/templates/AfterTask.yml
     displayName: CLILiveTest
     dependsOn: DetermineSDKForLiveJob
     condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'cli')
   - job : TFLiveTest
+    variables:
+      TASK_KEY: TFLiveTest
     steps:
     - bash: echo 'TF LiveTest'
     - template: .azure-pipelines/templates/BeforeTask.yml
     - template: .azure-pipelines/templates/SetupTFTestEnv.yml
     - template: .azure-pipelines/templates/RunTFLiveTest.yml
+    - template: .azure-pipelines/templates/AfterTask.yml
     displayName: TFLiveTest
     dependsOn: DetermineSDKForLiveJob
     condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'terraform')
@@ -265,7 +287,7 @@ stages:
         sdktarget=$(TARGET)
         if [ "$sdktarget" == "terraform" ]; then
           git clone --branch depth-$(TARGET)-$(ResourceProvider) https://${PIPELINE_USER}:${PIPELINE_TOKEN}@github.com/${TF_ORG}/terraform-provider-azurerm.git
-          cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.trenton.md ./terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/
+          # cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.trenton.md ./terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/
           cd ./terraform-provider-azurerm
           # git checkout -b depth-code-$(TARGET)-$(ResourceProvider)
           tf_existed_in_remote=$(git ls-remote --heads origin depth-code-$(TARGET)-$(ResourceProvider))
@@ -274,6 +296,7 @@ stages:
           else
             git checkout depth-code-$(TARGET)-$(ResourceProvider)
           fi
+          cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.trenton.md ./terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/
         fi
 
         if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
@@ -284,7 +307,7 @@ stages:
           fi
             
           # cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md ./azure-cli/src/azure-cli/azure/cli/command_modules/$name/
-          cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md ./azure-cli/
+          # cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md ./azure-cli/
           cd ./azure-cli
 
           # git checkout -b depth-code-$(TARGET)-$(ResourceProvider)
@@ -294,6 +317,7 @@ stages:
           else
             git checkout depth-code-$(TARGET)-$(ResourceProvider)
           fi
+          cp ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md ./azure-cli/
           git branch; git add -A; git commit -m "autogenerated"; git push origin depth-code-$(TARGET)-$(ResourceProvider);
 
         fi
@@ -309,6 +333,7 @@ stages:
         base="master"
         sdk="";
         to_mail="";
+        cc_mail=$(CCEails);
         if [ "$sdktarget" == "terraform" ]; then
           org=$(TF_ORG)
           repo="terraform-provider-azurerm"
@@ -339,9 +364,14 @@ stages:
         cat scripts/email.html
         echo "end of email"
         # to_mail="chunyu@microsoft.com"
+        plateform=$(PLATEFORM)
+        echo "plateform: $plateform"
+        if [ "$plateform" == "dev" ]; then
+          to_mail = "chunyu@microsoft.com"
+        fi
         
         sudo pip install wheel
         sudo pip install sendgrid
-        python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Onboarding Confirm" $(API_KEY)
+        python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Onboarding Confirm" $(API_KEY) cc_mail
         echo "end of send email"
       displayName: "send confirm email"

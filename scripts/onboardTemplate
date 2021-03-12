@@ -6,10 +6,8 @@
     <h1>{{head}}</h1>
     <p>Please confirm if the <a href='{{codePR}}'>code </a> is ready to submit or need to customize.</p>
     <p>If the code is ready to submit, please click 'Submit' button. Otherwise please cutomize the code first and then click 'customize' button.</p>
-    <form method="post">
+    <form>
         <a href="{{submitURL}}">Submit</a>
-        <input type="hidden" name="triggerPR" value="{{triggerPR}}">
-        <input type="hidden" name="codePR" value="{{codePR}}">
         <a href="{{customizeURL}}">Customize</a>   
     </form>
 </body>
