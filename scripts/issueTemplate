@@ -7,8 +7,7 @@
     <p>Issue occurred when generate code.</p> <a href="{{logURL}}">Error Log</a>
     <p>If you need to update swagger to resolve the issue, please update it in the <a href='{{codePR}}'>code pull request</a></p>
     <p>Please click 'Resolve' button after the issue is resolved.</p>
-    <form method="post">
-        <input type="hidden" name="codePR" value="{{codePR}}2">
+    <form>
         <a href="{{resolveURL}}">Resolve</a>   
     </form>
 </body>

@@ -312,6 +312,7 @@ stages:
         base="master"
         sdk="";
         to_mail="";
+        cc_mail=$(CCEails);
         if [ "$sdktarget" == "terraform" ]; then
           org=$(TF_ORG)
           repo="terraform-provider-azurerm"
@@ -350,6 +351,6 @@ stages:
         
         sudo pip install wheel
         sudo pip install sendgrid
-        python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Onboarding Confirm" $(API_KEY)
+        python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Onboarding Confirm" $(API_KEY) cc_mail
         echo "end of send email"
       displayName: "send confirm email"
