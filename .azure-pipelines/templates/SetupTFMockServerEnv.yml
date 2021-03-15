@@ -6,7 +6,8 @@ steps:
   displayName: 'setup terraform mock env'
 - bash: |
     az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
-    git clone https://github.com/Azure/avs.git
+    # git clone https://github.com/Azure/avs.git
+    git clone https://devdiv@dev.azure.com/devdiv/DevDiv/_git/avs
     cd avs
     npm install
     . initiate.sh
