@@ -8,6 +8,7 @@
     <p>If the code is ready to submit, please click 'Submit' button. Otherwise please cutomize the code first and then click 'customize' button.</p>
     <form>
         <a href="{{submitURL}}">Submit</a>
+        <a href="{{customizeURL}}&excludeTest=true">Customize without Test</a>
         <a href="{{customizeURL}}">Customize</a>   
     </form>
 </body>
