@@ -14,11 +14,11 @@ steps:
     sudo node dist/src/main.js > ../mockserver.log &
     cd $(Pipeline.Workspace)/s
     ls -l
-    ls -l avs/dist
+    ls -l package/dist
     ls -l ./venv/lib/
     ls -l ./venv/lib/python*/site-packages/certifi/cacert.pem
     # cat scripts/config/localhost_ca.crt >> ./venv/lib/python*/site-packages/certifi/cacert.pem
-    cat .ssh/localhost-ca.crt >> ./venv/lib/python*/site-packages/certifi/cacert.pem
+    cat package/.ssh/localhost-ca.crt >> ./venv/lib/python*/site-packages/certifi/cacert.pem
     ls -l ./venv/lib/python*/site-packages/certifi/cacert.pem
     # . venv/bin/activate
     which python
