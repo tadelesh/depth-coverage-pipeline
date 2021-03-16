@@ -129,6 +129,7 @@ stages:
       displayName: "set output variable"
       name: DetermineResult
     - template: .azure-pipelines/templates/UploadCode.yml
+    - template: .azure-pipelines/templates/IssueAlertTask.yml
     - template: .azure-pipelines/templates/AfterTask.yml
 - stage: Build
   dependsOn: GenerateCode
@@ -137,6 +138,7 @@ stages:
   - job: build
     variables:
       TASK_KEY: build
+      Contactors: "vsccodegen@microsoft.com"
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
     - script: echo 'build'
@@ -169,6 +171,7 @@ stages:
   - job: ClIMockTest
     variables:
       TASK_KEY: CLIMockTest
+      Contactors: "vsccodegen@microsoft.com"
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
     - script: echo 'CLI MockTest'
@@ -341,13 +344,13 @@ stages:
           org=$(TF_ORG)
           repo="terraform-provider-azurerm"
           sdk="terraform"
-          to_mail="tfazengvsc@microsoft.com"
+          to_mail="tfazengvsc@microsoft.com;vsccodegen@microsoft.com"
         else
           org=$(CLI_ORG)
           repo="azure-cli"
           base="dev"
           sdk="clicore"
-          to_mail="AzCLIInternal@microsoft.com"
+          to_mail="AzCLIInternal@microsoft.com;vsccodegen@microsoft.com"
         fi
         echo "repo: $repo"
         echo "org；$org"
