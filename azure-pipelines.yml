@@ -194,6 +194,7 @@ stages:
     - template: .azure-pipelines/templates/SetupCliMockServerEnv.yml
     # - template: .azure-pipelines/templates/SetupCliTestEnv.yml
     - template: .azure-pipelines/templates/RunCliMockTest.yml
+    - template: .azure-pipelines/templates/IssueAlertTask.yml
     - template: .azure-pipelines/templates/AfterTask.yml
     displayName: CLIMockTest
     dependsOn: DetermineSDKJob
@@ -208,6 +209,7 @@ stages:
     - template: .azure-pipelines/templates/SetupTFTestEnv.yml
     - template: .azure-pipelines/templates/SetupTFMockServerEnv.yml
     - template: .azure-pipelines/templates/RunTFMockTest.yml
+    - template: .azure-pipelines/templates/IssueAlertTask.yml
     - template: .azure-pipelines/templates/AfterTask.yml
     displayName: TFIMockTest
     dependsOn: DetermineSDKJob
