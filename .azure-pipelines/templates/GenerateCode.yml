@@ -56,7 +56,17 @@ steps:
     if [ "$sdktarget" == "terraform" ]; then
       echo 'workOnTF'
       sudo npm install -g metadata-tool@3.0.5
+      FILE=$(Pipeline.Workspace)/s/specification/$(ResourceProvider)/resource-manager/readme.trenton.md
+      if [ -f "$FILE" ]; then
+        echo "$FILE exists."
+        cp "$FILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.trenton.md
+      fi
       metadata-tool ./azure-rest-api-specs/$(README_FILE)
+      SchemaFILE=$(Pipeline.Workspace)/s/specification/$(ResourceProvider)/resource-manager/schema.json
+      if [ -f "$SchemaFILE" ]; then
+        echo "$SchemaFILE exists."
+        cp "$SchemaFILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json
+      fi
     fi
 
     if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
@@ -70,15 +80,8 @@ steps:
         echo "$FILE exists."
         cp "$FILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md
       fi
-      # ls -l ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager
-      # echo "./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.md"
-      # echo "./azure-rest-api-specs/$(README_FILE)"
-      # autorest --version=3.0.6271 --use=autorest-autoconfig@latest ./azure-rest-api-specs/$(README_FILE) --resource-file=./$(RESOURCE_MAP_FILE)
-      autorest --version=3.0.6271 --use=autorest-autoconfig@latest --target-mode=core ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.md --resource-file=./$(RESOURCE_MAP_FILE)
-      # ls -l ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager
-      # cat ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md
 
-      # echo "https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com" > ~/.git-credentials
+      autorest --version=3.0.6271 --use=autorest-autoconfig@latest --target-mode=core ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.md --resource-file=./$(RESOURCE_MAP_FILE)
     fi
 
     if [ "$?" != "0" ]; then
@@ -114,7 +117,6 @@ steps:
     fi
 
     if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cliextension" ]; then
-      # cat ./azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md
       # autorest --version=3.0.6271 --az --use=@autorest/az@latest ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli  --target-mode=core
       autorest --version=3.0.6271 --az --use=https://trenton.blob.core.windows.net/trenton/autorest-az-1.7.3.tgz ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli  --target-mode=core --gen-cmdlet-test 1>$(TASK_KEY).log 2>&1
       if [ "$?" != "0" ]; then

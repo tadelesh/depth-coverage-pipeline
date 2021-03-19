@@ -6,9 +6,6 @@ steps:
   displayName: 'setup terraform mock env'
 - bash: |
     az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
-    # git clone https://github.com/Azure/avs.git
-    # git clone https://devdiv@dev.azure.com/devdiv/DevDiv/_git/avs
-    # cd avs
     az storage blob download -c avs -f virtualservice-0.1.0.tgz -n virtualservice-0.1.0.tgz --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=amecodegenstorage
     tar -xzvf virtualservice-0.1.0.tgz
     cd package
