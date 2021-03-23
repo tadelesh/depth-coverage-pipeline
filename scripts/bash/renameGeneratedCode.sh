@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+set -x
 
 if [ -z $1 ]; then
     echo "Please input rp path"
@@ -8,9 +9,15 @@ fi
 RP_PATH=$1
 
 if [ -z $2 ]; then
-    echo "Please input rp path"
+    echo "Please input suffix"
 fi
 SUFFIX=$2
+
+if [ -z $3 ]; then
+  echo "please input the terraform provider folder path"
+fi
+
+PROVIDER_PATH=$3
 # SUFFIX="forpipeline"
 RP_FOLDER=`basename ${RP_PATH}`
 ORIGINAL_RP_FOLDER=`echo ${RP_FOLDER} | sed "s/${SUFFIX}//g"`
@@ -48,11 +55,11 @@ CLIENT_NEW_ORI="client.Web = web.NewClient(o)"
 SERVICE_IMPORT_ORI="\"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\""
 SERVICE_REGISTRATION_ORI="web.Registration{},"
 
-sed -i "/$CLIENT_IMPORT_ORI/a $CLIENT_IMPORT" ./azurerm/internal/clients/client.go
-sed -i "/$CLIENT_STRUCT_ORI/a $CLIENT_STRUCT" ./azurerm/internal/clients/client.go
-sed -i "/$CLIENT_NEW_ORI/a $CLIENT_NEW" ./azurerm/internal/clients/client.go
-sed -i "/$SERVICE_IMPORT_ORI/a $SERVICE_IMPORT" ./azurerm/internal/provider/services.go
-sed -i "/$SERVICE_REGISTRATION_ORI/a $SERVICE_REGISTRATION" ./azurerm/internal/provider/services.go
+sed -i "/$CLIENT_IMPORT_ORI/a $CLIENT_IMPORT" ${PROVIDER_PATH}/azurerm/internal/clients/client.go
+sed -i "/$CLIENT_STRUCT_ORI/a $CLIENT_STRUCT" ${PROVIDER_PATH}/azurerm/internal/clients/client.go
+sed -i "/$CLIENT_NEW_ORI/a $CLIENT_NEW" ${PROVIDER_PATH}/azurerm/internal/clients/client.go
+sed -i "/$SERVICE_IMPORT_ORI/a $SERVICE_IMPORT" ${PROVIDER_PATH}/azurerm/internal/provider/services.go
+sed -i "/$SERVICE_REGISTRATION_ORI/a $SERVICE_REGISTRATION" ${PROVIDER_PATH}/azurerm/internal/provider/services.go
 
 # change the client name in resource.go, resource_test.go and datasource.go
 find ${RP_PATH}/*_resource.go | sort | while read f; do sed -i "s/Client)\.${ORIGINAL_CLIENT_NAME}/Client)\.${CLIENT_NAME}/g" $f; done
