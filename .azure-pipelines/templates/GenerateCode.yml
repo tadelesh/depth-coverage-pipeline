@@ -109,9 +109,9 @@ steps:
       echo "$(RESOURCES)"
       tag=$(TAG)
       if [ "$tag" == "" ]; then
-        autorest --version=3.0.6219 --terraform --use=https://terraformcodegen.blob.core.windows.net/terraformcodegen/autorest-terraform-latest.tgz --generate-extra-acctest=true --terraform-output-folder=./generated ./azure-rest-api-specs/$(README_FILE) 1>$(TASK_KEY).log 2>&1
+        autorest --version=3.0.6219 --terraform --use=https://terraformcodegen.blob.core.windows.net/terraformcodegen/autorest-terraform-latest.tgz --resources=$(RESOURCES) --generate-extra-acctest=true --terraform-output-folder=./generated ./azure-rest-api-specs/$(README_FILE) 1>$(TASK_KEY).log 2>&1
       else
-        autorest --version=3.0.6219 --terraform --use=https://terraformcodegen.blob.core.windows.net/terraformcodegen/autorest-terraform-latest.tgz --tag=$(TAG) --generate-extra-acctest=true --terraform-output-folder=./generated ./azure-rest-api-specs/$(README_FILE) 1>$(TASK_KEY).log 2>&1
+        autorest --version=3.0.6219 --terraform --use=https://terraformcodegen.blob.core.windows.net/terraformcodegen/autorest-terraform-latest.tgz --resources=$(RESOURCES) --tag=$(TAG) --generate-extra-acctest=true --terraform-output-folder=./generated ./azure-rest-api-specs/$(README_FILE) 1>$(TASK_KEY).log 2>&1
       fi
 
       if [ "$?" != "0" ]; then
