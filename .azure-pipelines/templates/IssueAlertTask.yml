@@ -24,7 +24,7 @@ steps:
       sdk="clicore"
       to_mail="AzCLIInternal@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
     fi
-    resolveURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/Customize?triggerPR=$triggerPR&token=$(PIPELINE_TOKEN)&codePR=$codePR&org=$org""
+    resolveURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/Customize?triggerPR=$triggerPR&token=$(PIPELINE_TOKEN)&codePR=$codePR&org=$org"
         
     python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$logurl" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
     # cat scripts/email.html
