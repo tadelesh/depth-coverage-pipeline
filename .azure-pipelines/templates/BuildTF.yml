@@ -76,41 +76,74 @@ steps:
     else
       echo "##vso[task.setvariable variable=srcPackage]$(ResourceProvider)"
       cp -r ./generated/generated/$(ResourceProvider) ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/
+      ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(srcPackage)
+      # echo "$(ResourceProvider)"
+      # ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(srcPackage)
+
+      cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
+      echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go."
+
+      CLIENT_IMPORT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 1p`
+      CLIENT_STRUCT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 2p`
+      CLIENT_NEW=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 3p`
+      CLIENT_IMPORT_ORI="web \"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\/client\""
+      CLIENT_STRUCT_ORI="*web.Client"
+      CLIENT_NEW_ORI="client.Web = web.NewClient(o)"
+      
+      SERVICE_IMPORT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_services | sed -n 1p`
+      SERVICE_REGISTRATION=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_services | sed -n 2p`
+      SERVICE_IMPORT_ORI="\"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\""
+      SERVICE_REGISTRATION_ORI="web.Registration{},"
+
+      cat azurerm/internal/clients/client.go | grep -q "/$(srcPackage)/"|echo $?
+      if cat azurerm/internal/clients/client.go | grep -q "/$(srcPackage)/"; then
+        cat azurerm/internal/clients/client.go | grep "/$(srcPackage)/"
+        PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/$(srcPackage)/" | awk '{print $1}'`
+        sed -i "s|^.*${PACKAGE_NAME_ORI} \"github.*$|${CLIENT_IMPORT}|" azurerm/internal/clients/client.go
+        sed -i "s/^.*\*${PACKAGE_NAME_ORI}\.Client.*$/${CLIENT_STRUCT}/" azurerm/internal/clients/client.go
+        sed -i "s/^.*${PACKAGE_NAME_ORI}\.NewClient(o).*$/${CLIENT_NEW}/" azurerm/internal/clients/client.go
+      else
+        sed -i "/$CLIENT_IMPORT_ORI/a $CLIENT_IMPORT" azurerm/internal/clients/client.go
+        sed -i "/$CLIENT_STRUCT_ORI/a $CLIENT_STRUCT" azurerm/internal/clients/client.go
+        sed -i "/$CLIENT_NEW_ORI/a $CLIENT_NEW" azurerm/internal/clients/client.go
+        sed -i "/$SERVICE_IMPORT_ORI/a $SERVICE_IMPORT" azurerm/internal/provider/services.go
+        sed -i "/$SERVICE_REGISTRATION_ORI/a $SERVICE_REGISTRATION" azurerm/internal/provider/services.go
+      fi
     fi
 
-    ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(srcPackage)
-    # echo "$(ResourceProvider)"
     # ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(srcPackage)
+    # # echo "$(ResourceProvider)"
+    # # ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(srcPackage)
 
-    cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
-    echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go."
+    # cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
+    # echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go."
 
-    CLIENT_IMPORT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 1p`
-    CLIENT_STRUCT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 2p`
-    CLIENT_NEW=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 3p`
-    CLIENT_IMPORT_ORI="web \"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\/client\""
-    CLIENT_STRUCT_ORI="*web.Client"
-    CLIENT_NEW_ORI="client.Web = web.NewClient(o)"
+    # CLIENT_IMPORT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 1p`
+    # CLIENT_STRUCT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 2p`
+    # CLIENT_NEW=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_client | sed -n 3p`
+    # CLIENT_IMPORT_ORI="web \"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\/client\""
+    # CLIENT_STRUCT_ORI="*web.Client"
+    # CLIENT_NEW_ORI="client.Web = web.NewClient(o)"
     
-    SERVICE_IMPORT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_services | sed -n 1p`
-    SERVICE_REGISTRATION=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_services | sed -n 2p`
-    SERVICE_IMPORT_ORI="\"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\""
-    SERVICE_REGISTRATION_ORI="web.Registration{},"
+    # SERVICE_IMPORT=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_services | sed -n 1p`
+    # SERVICE_REGISTRATION=`cat azurerm/internal/services/$(srcPackage)/trenton-configuration/configuration_services | sed -n 2p`
+    # SERVICE_IMPORT_ORI="\"github.com\/terraform-providers\/terraform-provider-azurerm\/azurerm\/internal\/services\/web\""
+    # SERVICE_REGISTRATION_ORI="web.Registration{},"
 
-    cat azurerm/internal/clients/client.go | grep -q "/$(srcPackage)/"|echo $?
-    if cat azurerm/internal/clients/client.go | grep -q "/$(srcPackage)/"; then
-      cat azurerm/internal/clients/client.go | grep "/$(srcPackage)/"
-      PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/$(srcPackage)/" | awk '{print $1}'`
-      sed -i "s|^.*${PACKAGE_NAME_ORI} \"github.*$|${CLIENT_IMPORT}|" azurerm/internal/clients/client.go
-      sed -i "s/^.*\*${PACKAGE_NAME_ORI}\.Client.*$/${CLIENT_STRUCT}/" azurerm/internal/clients/client.go
-      sed -i "s/^.*${PACKAGE_NAME_ORI}\.NewClient(o).*$/${CLIENT_NEW}/" azurerm/internal/clients/client.go
-    else
-      sed -i "/$CLIENT_IMPORT_ORI/a $CLIENT_IMPORT" azurerm/internal/clients/client.go
-      sed -i "/$CLIENT_STRUCT_ORI/a $CLIENT_STRUCT" azurerm/internal/clients/client.go
-      sed -i "/$CLIENT_NEW_ORI/a $CLIENT_NEW" azurerm/internal/clients/client.go
-      sed -i "/$SERVICE_IMPORT_ORI/a $SERVICE_IMPORT" azurerm/internal/provider/services.go
-      sed -i "/$SERVICE_REGISTRATION_ORI/a $SERVICE_REGISTRATION" azurerm/internal/provider/services.go
-    fi
+    # cat azurerm/internal/clients/client.go | grep -q "/$(srcPackage)/"|echo $?
+    # if cat azurerm/internal/clients/client.go | grep -q "/$(srcPackage)/"; then
+    #   cat azurerm/internal/clients/client.go | grep "/$(srcPackage)/"
+    #   PACKAGE_NAME_ORI=`cat azurerm/internal/clients/client.go | grep "/$(srcPackage)/" | awk '{print $1}'`
+    #   sed -i "s|^.*${PACKAGE_NAME_ORI} \"github.*$|${CLIENT_IMPORT}|" azurerm/internal/clients/client.go
+    #   sed -i "s/^.*\*${PACKAGE_NAME_ORI}\.Client.*$/${CLIENT_STRUCT}/" azurerm/internal/clients/client.go
+    #   sed -i "s/^.*${PACKAGE_NAME_ORI}\.NewClient(o).*$/${CLIENT_NEW}/" azurerm/internal/clients/client.go
+    # else
+    #   sed -i "/$CLIENT_IMPORT_ORI/a $CLIENT_IMPORT" azurerm/internal/clients/client.go
+    #   sed -i "/$CLIENT_STRUCT_ORI/a $CLIENT_STRUCT" azurerm/internal/clients/client.go
+    #   sed -i "/$CLIENT_NEW_ORI/a $CLIENT_NEW" azurerm/internal/clients/client.go
+    #   sed -i "/$SERVICE_IMPORT_ORI/a $SERVICE_IMPORT" azurerm/internal/provider/services.go
+    #   sed -i "/$SERVICE_REGISTRATION_ORI/a $SERVICE_REGISTRATION" azurerm/internal/provider/services.go
+    # fi
 
     cat azurerm/internal/clients/client.go | grep "/$(srcPackage)/"
     echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go successfully."
