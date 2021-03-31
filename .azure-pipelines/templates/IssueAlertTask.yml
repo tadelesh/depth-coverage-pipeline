@@ -1,10 +1,30 @@
 steps:
-- script: |
-    codePRNumber=22
+- template: GenerateCodePR.yml
+- bash: |
     logurl="https://depthcoverage.blob.core.windows.net/depthcoverage/log/$(TARGET)-$(ResourceProvider)-$(Build.BuildId)-$(TASK_KEY).log"
-    codePR="https://github.com/${PIPELINE_ORG}/depth-coverage-pipeline/pull/$codePRNumber"
+    codePR=$(CODE_PULLREQUEST)
     triggerPR="https://github.com/${PIPELINE_ORG}/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
-    resolveURL="http://$(CodegenApp_Server):$(CodegenApp_Port)/DepthCoverage/Resolve"
+    # resolveURL="http://$(CodegenApp_Server)/DepthCoverage/Resolve"
+    sdktarget=$(TARGET)
+    org=""
+    repo=""
+    base="master"
+    sdk="";
+    to_mail="";
+    cc_mail=$(CCEails);
+    if [ "$sdktarget" == "terraform" ]; then
+      org=$(TF_ORG)
+      repo="terraform-provider-azurerm"
+      sdk="terraform"
+      to_mail="tfazengvsc@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
+    else
+      org=$(CLI_ORG)
+      repo="azure-cli"
+      base="dev"
+      sdk="clicore"
+      to_mail="AzCLIInternal@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
+    fi
+    resolveURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/Customize?triggerPR=$triggerPR&token=$(PIPELINE_TOKEN)&codePR=$codePR&org=$org"
         
     python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$logurl" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
     # cat scripts/email.html
