@@ -14,17 +14,7 @@ steps:
     buildType: 'current'
     patterns: '*variables/**'
     targetPath: '$(Pipeline.Workspace)'
-# - download: current
-  
-# - download: current
-#   patterns: 'sdkvariables/**'
 - script: |
-    set -x
-    ls -l $(Pipeline.Workspace)
-    ls -l $(Pipeline.Workspace)/variables/
-    ls -l $(Pipeline.Workspace)/sdkvariables/
-    ls -l $(Pipeline.Workspace)/variables/variables
-    ls -l $(Pipeline.Workspace)/sdkvariables/sdkvariables
     ResourceProvider=$(cat $(Pipeline.Workspace)/variables/variables/ResourceProvider)
     echo "##vso[task.setvariable variable=ResourceProvider]$ResourceProvider"
         
