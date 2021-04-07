@@ -166,7 +166,7 @@ stages:
     variables:
       TASK_KEY: build
       Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
-      srcPackage: $(ResourceProvider)
+      srcPackage: $(Package)
       prefix: forpipeline
     steps:
     - template: .azure-pipelines/templates/BeforeTask.yml
