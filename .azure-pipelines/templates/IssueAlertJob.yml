@@ -1,0 +1,6 @@
+jobs:
+- job: AlertIssue
+  steps:
+  - template: GenerateCodePR.yml
+  - template: IssueAlertTask.yml
+  condition: failed()
