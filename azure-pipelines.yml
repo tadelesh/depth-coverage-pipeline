@@ -156,8 +156,13 @@ stages:
       displayName: "set output variable"
       name: DetermineResult
     - template: .azure-pipelines/templates/UploadCode.yml
-    - template: .azure-pipelines/templates/IssueAlertTask.yml
+    # - template: .azure-pipelines/templates/IssueAlertTask.yml
     - template: .azure-pipelines/templates/AfterTask.yml
+  - job: alertCodeGenerationnFailure
+    condition: failed()
+    steps:
+    - template: .azure-pipelines/templates/VariableSetTask.yml
+    - template: .azure-pipelines/templates/IssueAlertTask.yml
 - stage: Build
   dependsOn: GenerateCode
   condition: and(succeeded(), eq(stageDependencies.GenerateCode.outputs['GenerateJob.DetermineResult.tobuild'], 'Yes'))
@@ -172,12 +177,15 @@ stages:
     - template: .azure-pipelines/templates/BeforeTask.yml
     - script: echo 'build'
     - template: .azure-pipelines/templates/BuildTF.yml
-    - template: .azure-pipelines/templates/IssueAlertTask.yml
+    # - template: .azure-pipelines/templates/IssueAlertTask.yml
     - template: .azure-pipelines/templates/AfterTask.yml
+  # - template: .azure-pipelines/templates/IssueAlertJob.yml
   - job: alertIssue
     dependsOn: build
     condition: and(failed(), eq(stageDependencies.GenerateCode.outputs['GenerateJob.DetermineResult.tobuild'], 'Yes'))
     steps:
+    - template: .azure-pipelines/templates/VariableSetTask.yml
+    - template: .azure-pipelines/templates/GenerateCodePR.yml
     - template: .azure-pipelines/templates/IssueAlertTask.yml
 - stage: MockTest
   dependsOn:
@@ -206,9 +214,8 @@ stages:
     - script: echo 'CLI MockTest'
     - template: .azure-pipelines/templates/SetupCliTestEnv.yml
     - template: .azure-pipelines/templates/SetupCliMockServerEnv.yml
-    # - template: .azure-pipelines/templates/SetupCliTestEnv.yml
     - template: .azure-pipelines/templates/RunCliMockTest.yml
-    - template: .azure-pipelines/templates/IssueAlertTask.yml
+    # - template: .azure-pipelines/templates/IssueAlertTask.yml
     - template: .azure-pipelines/templates/AfterTask.yml
     displayName: CLIMockTest
     dependsOn: DetermineSDKJob
@@ -225,12 +232,13 @@ stages:
     - template: .azure-pipelines/templates/SetupTFTestEnv.yml
     - template: .azure-pipelines/templates/SetupTFMockServerEnv.yml
     - template: .azure-pipelines/templates/RunTFMockTest.yml
-    - template: .azure-pipelines/templates/IssueAlertTask.yml
+    # - template: .azure-pipelines/templates/IssueAlertTask.yml
     - template: .azure-pipelines/templates/AfterTask.yml
-    displayName: TFIMockTest
+    displayName: TFMockTest
     dependsOn: DetermineSDKJob
     condition: eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'terraform')
-  - job: alertIssue
+  # - template: .azure-pipelines/templates/IssueAlertJob.yml
+  - job: MockTestFailureAlert
     variables:
       TASK_KEY: TFMockTest
       Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
@@ -240,6 +248,7 @@ stages:
     condition: or(and(eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'cli'), failed('ClIMockTest')), and(eq(dependencies.DetermineSDKJob.outputs['determineSDK.sdk'], 'terraform'), failed('TFMockTest')))
     steps:
     - template: .azure-pipelines/templates/VariableSetTask.yml
+    - template: .azure-pipelines/templates/GenerateCodePR.yml
     - template: .azure-pipelines/templates/IssueAlertTask.yml
 - stage: LiveTest
   dependsOn:
@@ -284,7 +293,7 @@ stages:
     displayName: TFLiveTest
     dependsOn: DetermineSDKForLiveJob
     condition: eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'terraform')
-  - job: alertIssue
+  - job: LiveTestFailureAlert
     variables:
       TASK_KEY: TFMockTest
       Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
@@ -294,7 +303,9 @@ stages:
     condition: or(and(eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'cli'), failed('ClIMockTest')), and(eq(dependencies.DetermineSDKForLiveJob.outputs['liveSDK.sdk'], 'terraform'), failed('TFMockTest')))
     steps:
     - template: .azure-pipelines/templates/VariableSetTask.yml
+    - template: .azure-pipelines/templates/GenerateCodePR.yml
     - template: .azure-pipelines/templates/IssueAlertTask.yml
+  # - template: .azure-pipelines/templates/IssueAlertJob.yml
 - stage: Submit
   dependsOn:
   - setup
