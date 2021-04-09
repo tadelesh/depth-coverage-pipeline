@@ -34,4 +34,3 @@ steps:
     sudo pip install sendgrid
     python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Issue Resolve" $(API_KEY)
   displayName: 'Alert issue'
-  condition: failed('$(TASK_KEY)')
