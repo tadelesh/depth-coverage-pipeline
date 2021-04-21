@@ -33,7 +33,7 @@ steps:
     else
       git checkout $(OnboardType)-$(TARGET)-$(ResourceProvider)
       # git reset --hard origin/$(OnboardType)-$(TARGET)-$(ResourceProvider)
-      git reset --hard origin/$base
+      # git reset --hard origin/$base
     fi
 
     #pull swagger repo
@@ -48,7 +48,7 @@ steps:
       git checkout -b $(OnboardType)-$(TARGET)-$(ResourceProvider)
     else
       git checkout $(OnboardType)-$(TARGET)-$(ResourceProvider)
-      git reset --hard origin/master
+      # git reset --hard origin/master
     fi
     git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3;"
     git pull origin $(OnboardType)-$(TARGET)-$(ResourceProvider)
