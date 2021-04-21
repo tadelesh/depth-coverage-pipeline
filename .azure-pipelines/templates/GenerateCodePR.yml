@@ -11,13 +11,13 @@ steps:
     fi
 
     if [ "$sdktarget" == "clicore" ]; then
-      git clone https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(CLI_ORG)/azure-cli
+      git clone --branch $(OnboardType)-$(TARGET)-$(ResourceProvider) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(CLI_ORG)/azure-cli
       repo="azure-cli"
       cp $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md $(Pipeline.Workspace)/s/azure-cli/
     fi
 
     if [ "$sdktarget" == "cliextension" ]; then
-      git clone https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(CLI_ORG)/azure-cli-extensions
+      git clone --branch $(OnboardType)-$(TARGET)-$(ResourceProvider) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(CLI_ORG)/azure-cli-extensions
       repo="azure-cli-extensions"
       cp $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.az.md $(Pipeline.Workspace)/s/azure-cli-extensions/
     fi
