@@ -7,7 +7,8 @@ steps:
     if [ "$sdktarget" == "terraform" ]; then
       git clone --branch $(OnboardType)-$(TARGET)-$(ResourceProvider) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(TF_ORG)/terraform-provider-azurerm.git
       repo="terraform-provider-azurerm"
-      cp $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.terraform.md $(Pipeline.Workspace)/s/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/
+      # cp $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.terraform.md $(Pipeline.Workspace)/s/terraform-provider-azurerm/azurerm/internal/services/$(ResourceProvider)/
+      cp $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.terraform.md $(Pipeline.Workspace)/s/terraform-provider-azurerm/
     fi
 
     if [ "$sdktarget" == "clicore" ]; then
