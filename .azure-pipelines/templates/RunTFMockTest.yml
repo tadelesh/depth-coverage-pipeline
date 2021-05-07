@@ -33,8 +33,8 @@ steps:
 
     ps -eaf |grep node
     netstat -l
-
-    make acctests SERVICE=$(Package) TESTARGS=-run=TestAcc[a-zA-Z]+_mockserver[a-zA-Z0-9]+ TESTTIMEOUT='60m' 1>$(TASK_KEY).log 2>&1
+    
+    make acctests SERVICE=$(Package)​​​​​​​​​​ TESTARGS=-run=TestAcc[a-zA-Z]+_[a-zA-Z0-9]+_mockserver TESTTIMEOUT='60m' 1>$(TASK_KEY).log 2>&1
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: TF Mock Test failed"
       az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
