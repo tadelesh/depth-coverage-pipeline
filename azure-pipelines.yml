@@ -373,8 +373,8 @@ stages:
         fi
 
         triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
-        submitURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/submit?token=$(PIPELINE_TOKEN)&swaggerorg=$(Swagger_ORG)&org=$org"
-        customizeURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/Customize?triggerPR=$triggerPR&token=$(PIPELINE_TOKEN)&codePR=$codePR&org=$org"
+        submitURL="http://$(CodegenApp_Server)/depthCoverage/resourceProvider/$(ResourceProvider)/sdk/$sdk/onboard?swaggerorg=$(Swagger_ORG)&org=$org"
+        customizeURL="http://$(CodegenApp_Server)/depthCoverage/resourceProvider/$(ResourceProvider)/sdk/$sdk/customize?triggerPR=$triggerPR&codePR=$codePR&org=$org"
 
         
         python scripts/onboard.py "Onboarding" "$(TARGET) Onboarding $(ResourceProvider) confirm" "$codePR" "$triggerPR" "$submitURL" "$customizeURL" > scripts/email.html

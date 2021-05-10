@@ -17,14 +17,25 @@ steps:
       repo="terraform-provider-azurerm"
       sdk="terraform"
       to_mail="tfazengvsc@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
-    else
+    fi
+
+    if [ "$sdktarget" == "clicore" ]; then
       org=$(CLI_ORG)
       repo="azure-cli"
       base="dev"
       sdk="clicore"
       to_mail="AzCLIInternal@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
     fi
-    resolveURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/Customize?triggerPR=$triggerPR&token=$(PIPELINE_TOKEN)&codePR=$codePR&org=$org"
+
+    if [ "$sdktarget" == "cliextension" ]; then
+      org=$(CLI_ORG)
+      repo="azure-cli-extensions"
+      base="master"
+      sdk="cliextension"
+      to_mail="AzCLIInternal@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
+    fi
+
+    resolveURL="http://$(CodegenApp_Server)/depthCoverage/resourceProvider/$(ResourceProvider)/sdk/$sdk/customize?triggerPR=$triggerPR&codePR=$codePR&org=$org"
         
     python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$logurl" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
     # cat scripts/email.html
