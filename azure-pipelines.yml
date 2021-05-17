@@ -256,7 +256,7 @@ stages:
   dependsOn:
   - setup
   - MockTest
-  condition: and(not(contains(stageDependencies.setup.outputs['config.configResource.excludestages'], 'LiveTest')), succeeded('MockTest'))
+  condition: and(not(contains(stageDependencies.setup.outputs['config.configResource.excludestages'], 'LiveTest')), or(succeeded('MockTest'), contains(stageDependencies.setup.outputs['config.configResource.ignore'], 'TestFailure')))
   jobs:
   - job: DetermineSDKForLiveJob
     steps:
