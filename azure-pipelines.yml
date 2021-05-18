@@ -6,6 +6,7 @@ pool:
   vmImage: 'Ubuntu 20.04'
 
 variables:
+- template: Variables.yml
 - name: PIPELINE_ORG
   value: Azure
 - name: PIPELINE_REPO
@@ -52,6 +53,7 @@ stages:
         sudo apt-get install jq -y
       displayName: 'prepare'
     - script: |
+        echo $(SDK)
         depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=read --PRNumber=$(System.PullRequest.PullRequestNumber)
         ls -l
         # rp=`jq .RPName $(RESOURCE_MAP_FILE)`
