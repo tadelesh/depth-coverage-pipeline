@@ -35,7 +35,12 @@ steps:
       to_mail="AzCLIInternal@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
     fi
 
-    resolveURL="http://$(CodegenApp_Server)/depthCoverage/resourceProvider/$(ResourceProvider)/sdk/$sdk/customize?triggerPR=$triggerPR&codePR=$codePR&org=$org"
+    onboardtype=$(OnboardType)
+    baseAPI="codegenerate"
+    if [ "$onboardtype" == "depth" ]; then
+      baseAPI="depthCoverage"
+    fi
+    resolveURL="http://$(CodegenApp_Server)/$baseAPI/resourceProvider/$(ResourceProvider)/sdk/$sdk/customize?triggerPR=$triggerPR&codePR=$codePR&org=$org"
         
     python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$logurl" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
     # cat scripts/email.html
@@ -44,4 +49,6 @@ steps:
     sudo pip install wheel
     sudo pip install sendgrid
     python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Issue Resolve" $(API_KEY)
+
+    # update code generation status
   displayName: 'Alert issue'
