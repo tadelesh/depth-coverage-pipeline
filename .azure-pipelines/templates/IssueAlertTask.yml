@@ -17,14 +17,30 @@ steps:
       repo="terraform-provider-azurerm"
       sdk="terraform"
       to_mail="tfazengvsc@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
-    else
+    fi
+
+    if [ "$sdktarget" == "clicore" ]; then
       org=$(CLI_ORG)
       repo="azure-cli"
       base="dev"
       sdk="clicore"
       to_mail="AzCLIInternal@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
     fi
-    resolveURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/Customize?triggerPR=$triggerPR&token=$(PIPELINE_TOKEN)&codePR=$codePR&org=$org"
+
+    if [ "$sdktarget" == "cliextension" ]; then
+      org=$(CLI_ORG)
+      repo="azure-cli-extensions"
+      base="master"
+      sdk="cliextension"
+      to_mail="AzCLIInternal@microsoft.com;chunyu@microsoft.com;vsccodegen@microsoft.com"
+    fi
+
+    onboardtype=$(OnboardType)
+    baseAPI="codegenerate"
+    if [ "$onboardtype" == "depth" ]; then
+      baseAPI="depthCoverage"
+    fi
+    resolveURL="http://$(CodegenApp_Server)/$baseAPI/resourceProvider/$(ResourceProvider)/sdk/$sdk/customize?triggerPR=$triggerPR&codePR=$codePR&org=$org"
         
     python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$logurl" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
     # cat scripts/email.html
@@ -33,4 +49,6 @@ steps:
     sudo pip install wheel
     sudo pip install sendgrid
     python scripts/sendGridemail.py "scripts/email.html" $to_mail "Depth-coverage Issue Resolve" $(API_KEY)
+
+    # update code generation status
   displayName: 'Alert issue'

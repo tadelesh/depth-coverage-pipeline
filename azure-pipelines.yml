@@ -6,6 +6,7 @@ pool:
   vmImage: 'Ubuntu 20.04'
 
 variables:
+- template: Variables.yml
 - name: PIPELINE_ORG
   value: Azure
 - name: PIPELINE_REPO
@@ -52,6 +53,7 @@ stages:
         sudo apt-get install jq -y
       displayName: 'prepare'
     - script: |
+        echo $(SDK)
         depthcoverage --token=$(PIPELINE_TOKEN) --org=$(PIPELINE_ORG) --repo=$(PIPELINE_REPO) --operation=read --PRNumber=$(System.PullRequest.PullRequestNumber)
         ls -l
         # rp=`jq .RPName $(RESOURCE_MAP_FILE)`
@@ -256,7 +258,7 @@ stages:
   dependsOn:
   - setup
   - MockTest
-  condition: and(not(contains(stageDependencies.setup.outputs['config.configResource.excludestages'], 'LiveTest')), succeeded('MockTest'))
+  condition: and(not(contains(stageDependencies.setup.outputs['config.configResource.excludestages'], 'LiveTest')), or(succeeded('MockTest'), contains(stageDependencies.setup.outputs['config.configResource.ignore'], 'TestFailure')))
   jobs:
   - job: DetermineSDKForLiveJob
     steps:
@@ -372,9 +374,16 @@ stages:
           sdk="cliextension"
         fi
 
+        onboardtype=$(OnboardType)
+        baseAPI="codegenerate"
+        if [ "$onboardtype" == "depth" ]; then
+          baseAPI="depthCoverage"
+        fi
+
         triggerPR="https://github.com/Azure/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
-        submitURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/submit?token=$(PIPELINE_TOKEN)&swaggerorg=$(Swagger_ORG)&org=$org"
-        customizeURL="http://$(CodegenApp_Server)/DepthCoverage/RPs/$(ResourceProvider)/SDKs/$sdk/Customize?triggerPR=$triggerPR&token=$(PIPELINE_TOKEN)&codePR=$codePR&org=$org"
+        submitURL="http://$(CodegenApp_Server)/$baseAPI/resourceProvider/$(ResourceProvider)/sdk/$sdk/onboard?swaggerorg=$(Swagger_ORG)&org=$org"
+        customizeURL="http://$(CodegenApp_Server)/$baseAPI/resourceProvider/$(ResourceProvider)/sdk/$sdk/customize?triggerPR=$triggerPR&codePR=$codePR&org=$org"
+        
 
         
         python scripts/onboard.py "Onboarding" "$(TARGET) Onboarding $(ResourceProvider) confirm" "$codePR" "$triggerPR" "$submitURL" "$customizeURL" > scripts/email.html

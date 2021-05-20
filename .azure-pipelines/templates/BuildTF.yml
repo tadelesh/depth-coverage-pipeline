@@ -13,10 +13,9 @@ steps:
     goPath: '/home/vsts/work/1/s/go'
     goBin: '/home/vsts/work/1/s/go/bin'
 - script: |
-    git clone https://github.com/Azure/azure-rest-api-specs.git
+    git clone --branch $(Swagger_BRANCH) https://github.com/Azure/azure-rest-api-specs.git
     mkdir -p ./go/src/github.com/terraform-providers
     cd ./go/src/github.com/terraform-providers
-    # git clone --branch pipeline https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(TF_ORG)/terraform-provider-azurerm.git
     git clone --branch $(OnboardType)-$(TARGET)-$(ResourceProvider) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(TF_ORG)/terraform-provider-azurerm.git
     echo "https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com" > ~/.git-credentials
     cd terraform-provider-azurerm
@@ -99,6 +98,7 @@ steps:
     
 
     echo -e "\e[32m[$(date -u)] LOG:]: Change client.go and service.go successfully."
+    cat azurerm/internal/provider/services.go
   displayName: "config client.go and service.go"
   condition: eq(variables['TARGET'], 'terraform')
 - bash: |
