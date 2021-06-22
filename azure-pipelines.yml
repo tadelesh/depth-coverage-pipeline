@@ -199,8 +199,7 @@ stages:
   dependsOn:
   - setup
   - GenerateCode
-  - Build
-  condition: and (not(contains(stageDependencies.setup.outputs['config.configResource.excludestages'], 'MockTest')), and(in(dependencies.Build.result, 'Succeeded', 'SucceededWithIssues', 'Skipped'), succeeded('GenerateCode')))
+  condition: and (not(contains(stageDependencies.setup.outputs['config.configResource.excludestages'], 'MockTest')), succeeded())
   jobs:
   - job: DetermineSDKJob
     steps:
