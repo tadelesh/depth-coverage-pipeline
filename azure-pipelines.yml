@@ -33,8 +33,6 @@ variables:
   value: ""
 - name: Artifcact
   value: ""
-- name: STAGES
-  value: "setup;GenerateCode;Build;MockTest;LiveTest;Submit"
 - name: CODE_PULLREQUEST
   value: ""
 stages:
@@ -110,8 +108,8 @@ stages:
         Write-Host "##vso[task.setvariable variable=ignore;isOutput=true]$ignore;TestFailure"
         Write-Host "##vso[task.setvariable variable=excludestages;isOutput=true]$excludeStages"
 
-        $stages="$(STAGES)"
-        if($excludeStages –ne $null) {
+        $stages="$(stages)"
+        if($excludeStages -ne $null) {
           $stagesArray=$stages.Split(";")
           $excludeArray=$excludeStages.Split(";")
           foreach ($element in $excludeArray) {
