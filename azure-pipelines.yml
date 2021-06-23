@@ -219,7 +219,7 @@ stages:
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       dependsOn:
       - MockTestJob
-      condition: failed('MockTestJob')))
+      condition: failed('MockTestJob')
       steps:
       - template: .azure-pipelines/templates/VariableSetTask.yml
       - template: .azure-pipelines/templates/GenerateCodePR.yml
@@ -246,9 +246,8 @@ stages:
         TASK_KEY: LiveTest
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       dependsOn:
-      - CLILiveTest
-      - TFLiveTest
-      condition: failed('LiveTest')))
+      - LiveTestJob
+      condition: failed('LiveTestJob')
       steps:
       - template: .azure-pipelines/templates/VariableSetTask.yml
       - template: .azure-pipelines/templates/GenerateCodePR.yml
