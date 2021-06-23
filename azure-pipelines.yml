@@ -200,6 +200,8 @@ stages:
     dependsOn:
     - setup
     - GenerateCode
+    - ${{ if contains(variables['stages'],'Build') }}:
+      - Build
     condition: and (not(contains(stageDependencies.setup.outputs['config.configResource.excludestages'], 'MockTest')), succeeded())
     jobs:
     - job: MockTestJob
