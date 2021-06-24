@@ -183,7 +183,7 @@ stages:
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       steps:
       - template: .azure-pipelines/templates/BeforeTask.yml
-      - template: .azure-pipelines/templates/BuildTF.yml
+      - template: .azure-pipelines/templates/${{variables.SDK}}/Build.yml
       - template: .azure-pipelines/templates/AfterTask.yml
     - job: BuildFailureAlert
       dependsOn: build
