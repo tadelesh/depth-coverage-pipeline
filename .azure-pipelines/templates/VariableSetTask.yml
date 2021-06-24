@@ -33,6 +33,9 @@ steps:
     onboardtype=$(cat $(Pipeline.Workspace)/variables/variables/OnboardType)
     echo "##vso[task.setvariable variable=OnboardType]$onboardtype"
 
+    Workbranch=$(cat $(Pipeline.Workspace)/variables/variables/Workbranch)
+    echo "##vso[task.setvariable variable=WORKBRANCH]$Workbranch"
+
     af=$(cat $(Pipeline.Workspace)/variables/variables/Artifact)
     if [ -f "$(Pipeline.Workspace)/sdkvariables/sdkvariables/Artifact" ]; then
       af=$(cat $(Pipeline.Workspace)/sdkvariables/sdkvariables/Artifact)
@@ -51,6 +54,7 @@ steps:
     echo $af
     echo $package
     echo $onboardtype
+    echo $Workbranch
     echo 'end' 
   displayName: 'set variable'
   condition: always()
