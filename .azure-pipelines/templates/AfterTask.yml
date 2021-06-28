@@ -18,6 +18,15 @@ steps:
     az storage blob upload -c depthcoverage -f $(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY)-log.tar.gz -n log/$(Build.BuildId)/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY)-log.tar.gz --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
   condition: always()
   displayName: 'upload log'
+- bash: |
+    npm install publish-sdkcodgen-pipeline-result
+    pwd
+    ls -l
+    ls -l /home/vsts/work
+    node /home/vsts/work/node_modules/publish-sdkcodgen-pipeline-result/dist/Logger/index.js --task=$(TASK_KEY) --status=completed --result=success --logfile=$(TASK_KEY).log --pipelineLog=pipe.log
+    az storage blob upload -c depthcoverage -f pipe.log -n log/$(Build.BuildId)/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY)-result.log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+  condition: always()
+  displayName: 'upload pipeline result'
 # - bash: |
 #     codePR=$(curl -X POST -H "Content-Type: application/json" http://$(CodegenApp_Server)/depthCoverage/generatePullRequest -d '{"org":"'"$org"'", "repo":"'"$repo"'", "title":"{$(OnboardType) coverage, not merge} pull request of $(ResourceProvider)", "branch":"$(WORKBRANCH)-code", "base":"'"$base"'"}')
 #   displayName: 'update code generation status'

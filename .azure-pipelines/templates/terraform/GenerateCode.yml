@@ -129,21 +129,21 @@ steps:
     schemafilepath="$(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json"
     fi
     set -- autorest --version=3.0.6369 --terraform --use=https://terraformcodegen.blob.core.windows.net/terraformcodegen/autorest-terraform-preview.tgz
-    if [ "$tag" !== "" ]; then
-    set -- "$@" --tag=$(TAG)
+    if [ "$tag" != "" ]; then
+      set -- "$@" --tag=$(TAG)
     fi
 
-    if [ "$schemafilepath" !== "" ]; then
-    set -- "$@" --schema-file-path="$schemafilepath"
+    if [ "$schemafilepath" != "" ]; then
+      set -- "$@" --schema-file-path="$schemafilepath"
     fi
 
-    if [ "$resources" !== "" ]; then
-    set -- "$@" --resources=$(RESOURCES)
+    if [ "$resources" != "" ]; then
+      set -- "$@" --resources=$(RESOURCES)
     fi
 
     set -- "$@" --generate-extra-acctest=true --terraform-output-folder=./generated ./azure-rest-api-specs/$(README_FILE) 1>$(TASK_KEY).log 2>&1
 
-    "$@"
+    "$@" 1>$(TASK_KEY).log 2>&1
 
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Generate code failed"

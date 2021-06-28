@@ -1,6 +1,7 @@
 steps:
 - template: VariableSetTask.yml
 - script: |
+    npm install -g publish-sdkcodgen-pipeline-result
     echo $pwd
     mkdir generated
     az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)

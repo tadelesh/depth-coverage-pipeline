@@ -57,6 +57,14 @@ stages:
         fi
       displayName: "set output variable"
       name: DetermineResult
+    # - bash: |
+    #     set -x
+    #     npm install publish-sdkcodgen-pipeline-result
+    #     pwd
+    #     ls -l
+    #     ls -l /home/vsts/work
+    #     node /home/vsts/work/node_modules/publish-sdkcodgen-pipeline-result/dist/sdk-code-generate.js
+    #   displayName: "upload pipeline result"
     - template: .azure-pipelines/templates/UploadCode.yml
     - template: .azure-pipelines/templates/AfterTask.yml
   - job: CodeGenerationFailureAlert
