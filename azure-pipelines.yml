@@ -35,6 +35,8 @@ variables:
   value: ""
 - name: CODE_PULLREQUEST
   value: ""
+- name: Task_Result
+  value: "success"
 stages:
 - template: .azure-pipelines/templates/Setup.yml
 - stage: GenerateCode
@@ -221,7 +223,7 @@ stages:
           fi
 
           onboardtype=$(OnboardType)
-          baseAPI="codegenerate"
+          baseAPI="codegenerations"
           if [ "$onboardtype" == "depth" ]; then
             baseAPI="depthCoverage"
           fi

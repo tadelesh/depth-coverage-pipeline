@@ -23,8 +23,13 @@ steps:
     pwd
     ls -l
     ls -l /home/vsts/work
-    node /home/vsts/work/node_modules/publish-sdkcodgen-pipeline-result/dist/Logger/index.js --task=$(TASK_KEY) --status=completed --result=success --logfile=$(TASK_KEY).log --pipelineLog=pipe.log
+    node /home/vsts/work/node_modules/publish-sdkcodgen-pipeline-result/dist/Logger/index.js --task=$(TASK_KEY) --status=completed --result=$(Task_Result) --logfile=$(TASK_KEY).log --pipelineLog=pipe.log
     az storage blob upload -c depthcoverage -f pipe.log -n log/$(Build.BuildId)/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY)-result.log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+
+    if [ "$(Task_Result)" != "success" ]; then
+      codePR=$(curl -X PATCH -H "Content-Type: application/json" https://$(CodegenApp_Server)/codegenerations/$(CodeGenerationName) -d '{"updateParameters": {"status": "completed"}}')
+      exit 1
+    fi
   condition: always()
   displayName: 'upload pipeline result'
 # - bash: |
