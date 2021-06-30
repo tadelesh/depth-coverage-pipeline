@@ -1,7 +1,7 @@
 steps:
 - template: GenerateCodePR.yml
 - bash: |
-    logurl="https://depthcoverage.blob.core.windows.net/depthcoverage/log/$(TARGET)-$(ResourceProvider)-$(Build.BuildId)-$(TASK_KEY).log"
+    logurl="https://depthcoverage.blob.core.windows.net/depthcoverage/log/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY).log"
     codePR=$(CODE_PULLREQUEST)
     triggerPR="https://github.com/${PIPELINE_ORG}/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
     # resolveURL="http://$(CodegenApp_Server)/DepthCoverage/Resolve"
