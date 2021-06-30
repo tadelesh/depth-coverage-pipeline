@@ -28,7 +28,7 @@ steps:
 
     if [ "$(Task_Result)" != "success" ]; then
       codePR=$(curl -X PATCH -H "Content-Type: application/json" https://$(CodegenApp_Server)/codegenerations/$(CodeGenerationName) -d '{"updateParameters": {"status": "completed"}}')
-      exit 1
+      # exit 1
     fi
   condition: always()
   displayName: 'upload pipeline result'

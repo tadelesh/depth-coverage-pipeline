@@ -111,7 +111,7 @@ stages:
     jobs:
     - job: MockTestJob
       variables:
-        TASK_KEY: MockTest
+        TASK_KEY: MockTestJob
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       steps:
       - template: .azure-pipelines/templates/BeforeTask.yml
@@ -122,7 +122,7 @@ stages:
       displayName: MockTest
     - job: MockTestFailureAlert
       variables:
-        TASK_KEY: MockTest
+        TASK_KEY: MockTestJob
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       dependsOn:
       - MockTestJob
@@ -150,7 +150,7 @@ stages:
       displayName: LiveTest
     - job: LiveTestFailureAlert
       variables:
-        TASK_KEY: LiveTest
+        TASK_KEY: LiveTestJob
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       dependsOn:
       - LiveTestJob
@@ -161,6 +161,7 @@ stages:
       - template: .azure-pipelines/templates/IssueAlertTask.yml
 - ${{ if contains(variables['stages'],'Submit') }}:
   - stage: Submit
+    condition: or(succeeded(), contains('${{ variables.ignore }}', 'TestFailure'))
     jobs:
     - job: submitJob
       steps:

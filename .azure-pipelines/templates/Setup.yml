@@ -79,8 +79,10 @@ stages:
         Write-Host "##vso[task.setvariable variable=Artifcact]$af"
         Write-Host "##vso[task.setvariable variable=Package]$packagename"
 
-        Write-Host "##vso[task.setvariable variable=ignore;isOutput=true]$ignore;TestFailure"
-        Write-Host "##vso[task.setvariable variable=excludestages;isOutput=true]$excludeStages"
+        # Write-Host "##vso[task.setvariable variable=ignore;isOutput=true]$ignore;TestFailure"
+        # Write-Host "##vso[task.setvariable variable=excludestages;isOutput=true]$excludeStages"
+        Write-Host "##vso[task.setvariable variable=ignore]$ignore;TestFailure"
+        Write-Host "##vso[task.setvariable variable=excludestages]$excludeStages"
 
         $stages="$(stages)"
         if($excludeStages -ne $null) {
@@ -108,6 +110,7 @@ stages:
         echo "$(Artifcact)" > $(Pipeline.Workspace)/variables/Artifact
         echo "$(Package)" > $(Pipeline.Workspace)/variables/Package
         echo "$(WORKBRANCH)" > $(Pipeline.Workspace)/variables/Workbranch
+        echo "$(ignore)" > $(Pipeline.Workspace)/variables/ignore
         
         echo ""
         ls -l $(Pipeline.Workspace)/variables
