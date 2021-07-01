@@ -33,5 +33,5 @@ steps:
   condition: always()
   displayName: 'upload pipeline result'
 # - bash: |
-#     codePR=$(curl -X POST -H "Content-Type: application/json" http://$(CodegenApp_Server)/depthCoverage/generatePullRequest -d '{"org":"'"$org"'", "repo":"'"$repo"'", "title":"{$(OnboardType) coverage, not merge} pull request of $(ResourceProvider)", "branch":"$(WORKBRANCH)-code", "base":"'"$base"'"}')
+#     codePR=$(curl -X POST -H "Content-Type: application/json" https://$(CodegenApp_Server)/depthCoverage/generatePullRequest -d '{"org":"'"$org"'", "repo":"'"$repo"'", "title":"{$(OnboardType) coverage, not merge} pull request of $(ResourceProvider)", "branch":"$(WORKBRANCH)-code", "base":"'"$base"'"}')
 #   displayName: 'update code generation status'
