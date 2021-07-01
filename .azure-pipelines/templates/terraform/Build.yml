@@ -60,7 +60,7 @@ steps:
       echo "$DIR not exists."
     fi
     
-    cp -r ./generated/generated/$(Package) ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/
+    cp -r ./generated/$(Package) ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/
     ls -l ./go/src/github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/$(Package)
 
     cd ./go/src/github.com/terraform-providers/terraform-provider-azurerm
