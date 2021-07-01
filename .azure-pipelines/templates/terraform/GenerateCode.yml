@@ -52,15 +52,15 @@ steps:
     sudo npm install -g metadata-tool
     FILE=$(Pipeline.Workspace)/s/specification/$(ResourceProvider)/resource-manager/readme.terraform.md
     if [ -f "$FILE" ]; then
-    echo "$FILE exists."
-    cp "$FILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.terraform.md
+      echo "$FILE exists."
+      cp "$FILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.terraform.md
     fi
     metadata-tool ./azure-rest-api-specs/$(README_FILE)
     ls -l
     SchemaFILE=$(Pipeline.Workspace)/s/specification/$(ResourceProvider)/resource-manager/schema.json
     if [ -f "$SchemaFILE" ]; then
-    echo "$SchemaFILE exists."
-    cp "$SchemaFILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json
+      echo "$SchemaFILE exists."
+      cp "$SchemaFILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json
     fi
     
     if [ "$?" != "0" ]; then
@@ -126,7 +126,7 @@ steps:
     resources=$(RESOURCES)
     schemafilepath=""
     if [ -f "$(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json" ]; then
-    schemafilepath="$(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json"
+      schemafilepath="$(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json"
     fi
     set -- autorest --version=3.0.6369 --terraform --use=https://terraformcodegen.blob.core.windows.net/terraformcodegen/autorest-terraform-preview.tgz
     if [ "$tag" != "" ]; then
