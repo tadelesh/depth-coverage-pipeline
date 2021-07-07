@@ -1,5 +1,4 @@
 steps:
-- template: ../PrepareCodeGenerateEnv.yml
 - bash: |
     cd $(Pipeline.Workspace)/s
     git clone --branch $(Swagger_BRANCH) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(Swagger_ORG)/azure-rest-api-specs.git
