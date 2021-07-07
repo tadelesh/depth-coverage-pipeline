@@ -30,7 +30,7 @@ steps:
     # publish result to cosmos db
     sudo apt-get install jq -y
     result=`jq . pipe.log`
-    curl -X PUT -H "Content-Type: application/json" http://$(CodegenApp_Server)/codegenerations/taskResult -d '{"buildId":$(Build.BuildId), "taskResult": '"$result"'}'
+    curl -X PUT -H "Content-Type: application/json" http://$(CodegenApp_Server)/codegenerations/taskResult -d '{"pipelineBuildId":$(Build.BuildId), "taskResult": '"$result"'}'
 
     if [ "$(Task_Result)" != "success" ]; then
       codePR=$(curl -X PATCH -H "Content-Type: application/json" https://$(CodegenApp_Server)/codegenerations/$(CodeGenerationName) -d '{"updateParameters": {"status": "completed"}}')
