@@ -1,0 +1,27 @@
+steps:
+- task: GoTool@0
+  inputs:
+    version: '1.16.x'
+    goPath: '/home/vsts/work/1/s/go'
+    goBin: '/home/vsts/work/1/s/go/bin'
+- bash: |
+    cd $(Pipeline.Workspace)/s
+    git clone --branch $(Swagger_BRANCH) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(Swagger_ORG)/azure-rest-api-specs.git
+    git clone --branch $(WORKBRANCH) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(TF_ORG)/azure-sdk-for-go
+    echo "https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com" > ~/.git-credentials
+    cd azure-sdk-for-go
+    # export GOPATH=/home/vsts/work/1/s/go
+    # echo $GOPATH
+    git config credential.helper store ; git config --global user.email "chunyu@microsoft.com";git config --global user.name "chunyu3"
+  displayName: 'pull repo'
+- bash:
+    cd $(Pipeline.Workspace)/s/azure-sdk-for-go/sdk/$(ResourceProvider)/arm$(ResourceProvider)
+    
+    go get github.com/Azure/azure-sdk-for-go/sdk/azidentity@latest && go get github.com/Azure/azure-sdk-for-go/sdk/armcore@latest && go get github.com/Azure/azure-sdk-for-go/sdk/azcore@latest && go get github.com/Azure/azure-sdk-for-go/sdk/to@latest && go mod tidy
+    go build 1>>$(TASK_KEY).log 2>&1
+    
+    if [ "$?" != "0" ]; then
+      echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $(ResourceProvider)]: Build go sdk failed"
+      exit 1
+    fi
+  displayName: 'build go-sdk'

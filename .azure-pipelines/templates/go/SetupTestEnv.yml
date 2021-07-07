@@ -1,0 +1,10 @@
+steps:
+- task: GoTool@0
+  inputs:
+    version: '1.16.x'
+    goPath: '/home/vsts/work/1/s/go'
+    goBin: '/home/vsts/work/1/s/go/bin'
+- bash: |
+    git clone --branch $(WORKBRANCH) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(TF_ORG)/azure-sdk-for-go
+    git clone --branch $(WORKBRANCH) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com/$(Swagger_ORG)/azure-rest-api-specs.git
+  displayName: 'Setup Test Env'

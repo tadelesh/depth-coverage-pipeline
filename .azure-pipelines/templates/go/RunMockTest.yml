@@ -1,0 +1,7 @@
+steps:
+- bash: |
+    cd $(Pipeline.Workspace)/s/azure-sdk-for-go/sdk/$(ResourceProvider)/arm$(ResourceProvider)
+    go get gotest.tools/gotestsum
+    go mod tidy
+    gotestsum --format testname -- -coverprofile cover.out
+  displayName: 'Mock Test'
