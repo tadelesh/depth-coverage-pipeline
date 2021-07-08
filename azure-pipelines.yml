@@ -263,3 +263,10 @@ stages:
 
           codePR=$(curl -X PATCH -H "Content-Type: application/json" https://$(CodegenApp_Server)/codegenerations/$(CodeGenerationName) -d '{"updateParameters": {"status": "pipelineCompleted"}}')
         displayName: "send confirm email"
+- stage: Result
+  jobs:
+  - job: publishResult
+    steps:
+    - bash: |
+        codePR=$(curl -X PATCH -H "Content-Type: application/json" https://$(CodegenApp_Server)/codegenerations/$(CodeGenerationName) -d '{"updateParameters": {"status": "completed"}}')
+      displayName: 'set complete'
