@@ -50,15 +50,15 @@ stages:
     steps:
     - template: .azure-pipelines/templates/VariableSetTask.yml
     - template: .azure-pipelines/templates/${{variables.SDK}}/GenerateCode.yml
-    - bash: |
-        sdktarget=$(TARGET)
-        if [ "$sdktarget" == "terraform" ]; then
-          echo "##vso[task.setvariable variable=tobuild;isOutput=true]Yes"
-        else
-          echo "##vso[task.setvariable variable=tobuild;isOutput=true]No"
-        fi
-      displayName: "set output variable"
-      name: DetermineResult
+    # - bash: |
+    #     sdktarget=$(TARGET)
+    #     if [ "$sdktarget" == "terraform" ]; then
+    #       echo "##vso[task.setvariable variable=tobuild;isOutput=true]Yes"
+    #     else
+    #       echo "##vso[task.setvariable variable=tobuild;isOutput=true]No"
+    #     fi
+    #   displayName: "set output variable"
+    #   name: DetermineResult
     # - bash: |
     #     set -x
     #     npm install publish-sdkcodgen-pipeline-result
@@ -80,7 +80,7 @@ stages:
 - ${{ if contains(variables['stages'],'Build') }}:
   - stage: Build
     dependsOn: GenerateCode
-    condition: and(succeeded(), eq(stageDependencies.GenerateCode.outputs['GenerateJob.DetermineResult.tobuild'], 'Yes'))
+    # condition: and(succeeded(), eq(stageDependencies.GenerateCode.outputs['GenerateJob.DetermineResult.tobuild'], 'Yes'))
     jobs:
     - job: build
       variables:
