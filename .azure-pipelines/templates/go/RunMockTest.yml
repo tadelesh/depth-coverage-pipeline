@@ -1,7 +1,15 @@
 steps:
 - bash: |
     cd $(Pipeline.Workspace)/s/azure-sdk-for-go/sdk/$(ResourceProvider)/arm$(ResourceProvider)
+    echo $GOPATH
+    echo $GOROOT
+    export AZURE_CLIENT_ID=$(SERVICE_PRINCIPE_ID)
+    export AZURE_CLIENT_SECRET=$(SERVICE_PRINCIPE_SECRET)
+    export SUBSCRIPTION_ID=$(SERVICE_PRINCIPE_SUBSCRIPTION)
+    export AZURE_TENANT_ID=$(SERVICE_PRINCIPE_TENANT)
+
     go get gotest.tools/gotestsum
+    ls -l $(Pipeline.Workspace)/s/go/bin
     go mod tidy
-    gotestsum --format testname -- -coverprofile cover.out
+    $(Pipeline.Workspace)/s/go/bin/gotestsum --format testname -- -coverprofile cover.out
   displayName: 'Mock Test'
