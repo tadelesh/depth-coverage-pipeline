@@ -45,7 +45,7 @@ stages:
   jobs:
   - job: GenerateJob
     variables:
-      TASK_KEY: GenerateJob
+      TASK_KEY: GenerateCode
       Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
     steps:
     - template: .azure-pipelines/templates/VariableSetTask.yml
@@ -84,7 +84,7 @@ stages:
     jobs:
     - job: build
       variables:
-        TASK_KEY: build
+        TASK_KEY: Build
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       steps:
       - template: .azure-pipelines/templates/BeforeTask.yml
@@ -111,7 +111,7 @@ stages:
     jobs:
     - job: MockTestJob
       variables:
-        TASK_KEY: MockTestJob
+        TASK_KEY: MockTest
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       steps:
       - template: .azure-pipelines/templates/BeforeTask.yml
@@ -122,7 +122,7 @@ stages:
       displayName: MockTest
     - job: MockTestFailureAlert
       variables:
-        TASK_KEY: MockTestJob
+        TASK_KEY: MockTestFailureAlert
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       dependsOn:
       - MockTestJob
@@ -140,7 +140,7 @@ stages:
     jobs:
     - job: LiveTestJob
       variables:
-        TASK_KEY: LiveTestJob
+        TASK_KEY: LiveTest
       steps:
       - script: echo 'CLILiveTest'
       - template: .azure-pipelines/templates/BeforeTask.yml
@@ -150,7 +150,7 @@ stages:
       displayName: LiveTest
     - job: LiveTestFailureAlert
       variables:
-        TASK_KEY: LiveTestJob
+        TASK_KEY: LiveTestFailureAlert
         Contactors: "chunyu@microsoft.com;vsccodegen@microsoft.com"
       dependsOn:
       - LiveTestJob
@@ -164,6 +164,8 @@ stages:
     condition: or(succeeded(), contains('${{ variables.ignore }}', 'TestFailure'))
     jobs:
     - job: submitJob
+      variables:
+        TASK_KEY: Submit
       steps:
       - template: .azure-pipelines/templates/BeforeTask.yml
       - bash: |
