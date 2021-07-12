@@ -11,8 +11,8 @@ variables:
   TRIGGER_TYPE: "[[TriggerType]]" # valid: CI, PR; CI is not supported yet
   ASSOCIATED_PR_NUMBER: "[[AssociatedPrNumber]]"
   UNIFIED_PIPELINE_BUILD_ID: "[[UnifiedPipelineBuildId]]"
-  SPEC_REPO_OWNER: "[[SpecRepoOwner]]"
-  SPEC_REPO_NAME: "[[SpecRepoName]]"
+  # SPEC_REPO_OWNER: "[[SpecRepoOwner]]"
+  # SPEC_REPO_NAME: "[[SpecRepoName]]"
   SPEC_REPO_PULL_REQUEST_NUMBER: "[[SpecRepoPullRequestNumber]]"
   SPEC_REPO_HEAD_SHA: "[[SpecRepoHeadSha]]"
   SPEC_REPO_REF: "[[SpecRepoRef]]"
@@ -29,4 +29,16 @@ variables:
 
   UNIVERSAL_PACKAGE_VERSION: "0.20210119.3" # Updated in template-unified-pipeline-package.yaml
 
+  CodeGenerationName: "[[CodeGenerationName]]"
   SDK: "[[targetSDK]]"
+  stages: "[[stages]]"
+  SPEC_REPO_TYPE: "[[SPEC_REPO_TYPE]]"
+  SPEC_REPO_URL: "[[SPEC_REPO_URL]]"
+  SPEC_REPO_BASE_BRANCH: "[[SPEC_REPO_BASE_BRANCH]]"
+  SPEC_REPO_OWNER: "[[SpecRepoOwner]]"
+  SPEC_REPO_NAME: "[[SpecRepoName]]"
+  SDK_REPO_TYPE: "[[SDK_REPO_TYPE]]"
+  SDK_REPO_URL: "[[SDK_REPO_URL]]"
+  SDK_REPO_BASE_BRANCH: "[[SDK_REPO_BASE_BRANCH]]"
+  SDK_REPO_OWNER: "[[sdkRepoOwner]]"
+  SDK_REPO_NAME: "[[sdkRepoName]]"
