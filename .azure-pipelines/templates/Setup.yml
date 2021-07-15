@@ -66,7 +66,7 @@ stages:
           # $af="generated/$name $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/Azure/azure-sdk-for-go/services/$name"
           $af="$name"
           $packagename=$name
-        } else {
+        } elseif ($target -eq "clicore") {
           if($name -eq "compute") {
             $af="azure-cli/src/azure-cli/azure/cli/command_modules/vm azure-cli/src/azure-cli/requirements*.txt azure-cli/doc/sphinx/azhelpgen/doc_source_map.json azure-rest-api-specs/specification/$name/resource-manager/readme.az.md"
             $packagename="vm"
@@ -74,6 +74,8 @@ stages:
             $af="azure-cli/src/azure-cli/azure/cli/command_modules/$name azure-cli/src/azure-cli/requirements*.txt azure-cli/doc/sphinx/azhelpgen/doc_source_map.json azure-rest-api-specs/specification/$name/resource-manager/readme.az.md"
             $packagename=$name
           }
+        } elseif ($target -eq "go"){
+          $af="$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/arm$(ResourceProvider)"
         }
         echo "artifat:$af"
         Write-Host "##vso[task.setvariable variable=Artifcact]$af"

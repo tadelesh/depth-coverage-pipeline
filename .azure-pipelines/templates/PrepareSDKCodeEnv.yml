@@ -8,13 +8,10 @@ steps:
     # pull sdk repo
     set -x
     echo "https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@github.com" > ~/.git-credentials
-    sdktarget=$(SDK)
-    repo=""
-    base=""
     cd $(Pipeline.Workspace)/s
     git clone --branch $(SDK_REPO_BASE_BRANCH) https://$(PIPELINE_USER):$(PIPELINE_TOKEN)@$(SDK_REPO_URL)
 
-    cd $(Pipeline.Workspace)/s/$repo/$(SDK_REPO_NAME)
+    cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)
     tf_existed_in_remote=$(git ls-remote --heads origin $(WORKBRANCH))
     if [[ -z ${tf_existed_in_remote} ]]; then
       git checkout -b $(WORKBRANCH)
