@@ -22,6 +22,7 @@ steps:
     
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Compile Generated code failed"
+      echo "##vso[task.setvariable variable=Task_Result]failure"
       exit 1
     fi
   displayName: 'build go-sdk'
