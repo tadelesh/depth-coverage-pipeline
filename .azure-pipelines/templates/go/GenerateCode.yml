@@ -13,6 +13,7 @@ steps:
     
     if [ "$?" != "0" ]; then
       echo "failed to generate readme config file"
+      echo "##vso[task.setvariable variable=Task_Result]failure"
     else
       echo "readme config file generated"
       cd $(Pipeline.Workspace)/s/azure-rest-api-specs
