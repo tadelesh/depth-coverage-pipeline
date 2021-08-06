@@ -12,4 +12,11 @@ steps:
     ls -l $(Pipeline.Workspace)/s/go/bin
     go mod tidy
     $(Pipeline.Workspace)/s/go/bin/gotestsum --format testname -- -coverprofile cover.out
+    if [ "$?" != "0" ]; then
+      echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Go Mock Test failed"
+      az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
+      az storage blob upload -c depthcoverage -f $(TASK_KEY).log -n log/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY).log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+      echo "##vso[task.setvariable variable=Task_Result]failure"
+      exit 1
+    fi
   displayName: 'Mock Test'
