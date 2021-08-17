@@ -1,0 +1,23 @@
+steps:
+- template: ../PrepareSDKCodeEnv.yml
+- bash: |
+    bash ./scripts/bash/dotnet/installDotnet.sh 1>$(TASK_KEY).log 2>&1
+  displayName: 'install .net'
+- bash: |
+    serviceType=$(SERVICE_TYPE)
+    if [ "$serviceType" == "resource-manager" ]; then
+      echo 'resource-manager'
+      cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)
+      dotnet new -i $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/eng/templates/Azure.ResourceManager.Template
+      mkdir -p $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)
+      cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)
+      dotnet new azuremgmt --provider $(ResourceProvider) --includeCI true --force
+    elif [ "$serviceType" == "data-plan" ]; then
+      echo 'data-plan'
+    fi
+  displayName: 'Generate autorest.md'
+- bash: |
+    cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)/src
+    dotnet build
+    dotnet build /t:GenerateCode 1>>$(TASK_KEY).log 2>&1
+  displayName: 'Generate code and build'
