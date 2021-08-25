@@ -9,7 +9,12 @@ steps:
     
     sdktarget=$(TARGET)
     if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cli" ]; then
-      azdev test $(Package) --live --discover --no-exitfirst -a -k "_swagger_scenario" 1>$(TASK_KEY).log 2>&1
+      # azdev test $(Package) --live --discover --no-exitfirst -a -k "_swagger_scenario" 1>$(TASK_KEY).log 2>&1
+      cd $(Pipeline.Workspace)/s/azure-cli/src/azure-cli/azure/cli/command_modules/$(Package)/tests/latest
+      for entry in `ls test*.py`; do
+        echo $entry
+        pytest -rA $entry 1>$(TASK_KEY).log 2>&1
+      done
     else
       #cli-extension
       extension_name=$(ResourceProvider)
