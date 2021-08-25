@@ -38,18 +38,18 @@ BELOW TEST SCENARIO SECTION CAN BE USED IN readme.cli.md
     - name: /FarmBeatsModels/delete/FarmBeatsModels_Delete
 --------------------------------------------------------
 FATAL: Error: ENOENT: no such file or directory, open '/home/vsts/work/1/s/azure-cli/doc/sphinx/azhelpgen/doc_source_map.json'
-(node:2765) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
+(node:2653) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
     at /home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/plugins/external.js:26:19
     at async ScheduleNode (/home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/pipeline.js:294:33)
 (Use `node --trace-warnings ...` to show where the warning was created)
-(node:2765) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 50)
-(node:2765) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
-(node:2765) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
+(node:2653) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 50)
+(node:2653) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+(node:2653) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
     at /home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/plugins/external.js:26:19
     at async ScheduleNode (/home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/pipeline.js:294:33)
-(node:2765) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 51)
-(node:2765) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
+(node:2653) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 51)
+(node:2653) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
     at /home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/plugins/external.js:26:19
     at async ScheduleNode (/home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/pipeline.js:294:33)
-(node:2765) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 52)
+(node:2653) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 52)
   Error: Plugin azgenerator reported failure.
