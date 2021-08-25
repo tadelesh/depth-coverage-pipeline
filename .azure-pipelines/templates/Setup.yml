@@ -66,7 +66,7 @@ stages:
           # $af="generated/$name $(Pipeline.Workspace)/s/go/src/github.com/terraform-providers/terraform-provider-azurerm/vendor/github.com/Azure/azure-sdk-for-go/services/$name"
           $af="$name"
           $packagename=$name
-        } elseif ($target -eq "clicore") {
+        } elseif ($target -eq "clicore" -Or $target -eq "cli") {
           if($name -eq "compute") {
             $af="azure-cli/src/azure-cli/azure/cli/command_modules/vm azure-cli/src/azure-cli/requirements*.txt azure-cli/doc/sphinx/azhelpgen/doc_source_map.json azure-rest-api-specs/specification/$name/resource-manager/readme.az.md"
             $packagename="vm"
