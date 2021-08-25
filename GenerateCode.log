@@ -1,0 +1,55 @@
+AutoRest code generation utility [cli version: 3.3.2; node: v14.17.5]
+(C) 2018 Microsoft Corporation.
+https://aka.ms/autorest
+NOTE: AutoRest core version selected from configuration: 3.0.6271.
+   Loading AutoRest core      '/home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist' (3.0.6271)
+   Loading AutoRest extension '@autorest/az' (https://trenton.blob.core.windows.net/trenton/autorest-az-1.7.3.tgz->1.7.3)
+   Loading AutoRest extension '@autorest/python' (5.4.0->5.4.0)
+   Loading AutoRest extension '@autorest/clicommon' (0.6.1->0.6.1)
+   Loading AutoRest extension '@autorest/modelerfour' (4.15.421->4.15.421)
+
+WARNING (PreCheck/AllOfWhenYouMeantRef): Schema 'ProxyResource' is using an 'allOf' instead of a $ref. This creates a wasteful anonymous type when generating code.
+
+WARNING (PreCheck/CheckDuplicateSchemas): Checking for duplicate schemas, this could take a (long) while.  Run with --verbose for more detail.
+
+WARNING (): Operation Update has already existed in group! Skip split!
+
+WARNING (): cli.auto-parameter-hidden is not true, skip visibility cleaner
+INFORMATION: NOTE: You are currently generating based on track2 SDK 
+INFORMATION: Existing Cli code generation-mode is: Full
+INFORMATION: Input generation-mode is: auto
+INFORMATION: generation-mode in code model is: Full
+
+BELOW TEST SCENARIO SECTION CAN BE USED IN readme.cli.md
+--------------------------------------------------------
+  test-scenario:
+    - name: /Extensions/put/Extensions_Create
+    - name: /Extensions/get/Extensions_Get
+    - name: /Extensions/get/Extensions_ListByFarmBeats
+    - name: /Extensions/patch/Extensions_Update
+    - name: /Extensions/delete/Extensions_Delete
+    - name: /FarmBeatsExtensions/get/FarmBeatsExtensions_Get
+    - name: /FarmBeatsExtensions/get/FarmBeatsExtensions_List
+    - name: /FarmBeatsModels/put/FarmBeatsModels_CreateOrUpdate
+    - name: /FarmBeatsModels/get/FarmBeatsModels_Get
+    - name: /FarmBeatsModels/get/FarmBeatsModels_ListByResourceGroup
+    - name: /FarmBeatsModels/get/FarmBeatsModels_ListBySubscription
+    - name: /FarmBeatsModels/patch/FarmBeatsModels_Update
+    - name: /FarmBeatsModels/delete/FarmBeatsModels_Delete
+--------------------------------------------------------
+FATAL: Error: ENOENT: no such file or directory, open '/home/vsts/work/1/s/azure-cli/doc/sphinx/azhelpgen/doc_source_map.json'
+(node:2686) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
+    at /home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/plugins/external.js:26:19
+    at async ScheduleNode (/home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/pipeline.js:294:33)
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2686) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 50)
+(node:2686) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+(node:2686) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
+    at /home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/plugins/external.js:26:19
+    at async ScheduleNode (/home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/pipeline.js:294:33)
+(node:2686) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 51)
+(node:2686) UnhandledPromiseRejectionWarning: Error: Plugin azgenerator reported failure.
+    at /home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/plugins/external.js:26:19
+    at async ScheduleNode (/home/vsts/.autorest/@autorest_core@3.0.6271/node_modules/@autorest/core/dist/lib/pipeline/pipeline.js:294:33)
+(node:2686) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 52)
+  Error: Plugin azgenerator reported failure.
