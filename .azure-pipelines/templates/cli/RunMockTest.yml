@@ -7,7 +7,7 @@ steps:
     # az vm show --name MyVm --resource-group MyResourceGroup --debug
     export AZURE_TEST_RUN_LIVE=true
     sdktarget=$(TARGET)
-    if [ "$sdktarget" == "clicore" ]; then
+    if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cli" ]; then
       pytest -rA ./azure-cli/src/azure-cli/azure/cli/command_modules/$(Package)/tests/cmdlet/test_positive.py 1>$(TASK_KEY).log 2>&1
     else
       #cli-extension
