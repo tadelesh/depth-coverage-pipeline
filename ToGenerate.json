@@ -11,7 +11,7 @@
   "sdkRepo": {
     "type": "github",
     "path": "https://github.com/chunyu3/azure-cli",
-    "branch": "main"
+    "branch": "dev"
   },
   "codegenRepo": {
     "type": "github",
