@@ -6,7 +6,7 @@
   "swaggerRepo": {
     "type": "github",
     "path": "https://github.com/Azure/azure-rest-api-specs",
-    "branch": "main"
+    "branch": "main "
   },
   "sdkRepo": {
     "type": "github",
