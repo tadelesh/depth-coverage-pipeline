@@ -8,7 +8,7 @@ steps:
     # az vm show --name MyVm --resource-group MyResourceGroup --debug
     
     sdktarget=$(TARGET)
-    if [ "$sdktarget" == "clicore" ]; then
+    if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cli" ]; then
       azdev test $(Package) --live --discover --no-exitfirst -a -k "_swagger_scenario" 1>$(TASK_KEY).log 2>&1
     else
       #cli-extension
