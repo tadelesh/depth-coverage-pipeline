@@ -266,6 +266,7 @@ stages:
 - stage: Result
   jobs:
   - job: publishResult
+    condition: always()
     steps:
     - bash: |
         codePR=$(curl -X PATCH -H "Content-Type: application/json" https://$(CodegenApp_Server)/codegenerations/$(CodeGenerationName) -d '{"updateParameters": {"status": "completed"}}')
