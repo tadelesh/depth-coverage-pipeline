@@ -47,6 +47,7 @@ steps:
     fi
   displayName: "Generate Go-sdk"
 - bash: |
+    set -x
     moduleName="sdk/$(ResourceProvider)/arm$(ResourceProvider)"
     module="github.com/Azure/azure-sdk-for-go/$moduleName"
     gosdkfolder="$(Pipeline.Workspace)/s/azure-sdk-for-go"
@@ -54,7 +55,7 @@ steps:
     cd $(Pipeline.Workspace)/s
     autorest --version=3.2.1 --use=https://amecodegenstorage.blob.core.windows.net/tools/autorest-tests-0.1.0-preview.tgz $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/readme.md --use=@autorest/go@4.0.0-preview.24 --file-prefix="zz_generated_" --track2 --go --output-folder=$outputfolder 1>>$(TASK_KEY).log 2>&1
     if [ "$?" != "0" ]; then
-      echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $(ResourceProvider)]: Generate go sdk failed"
+      echo -e "\e[31m[$(date -u)] ERROR: [$OPERATION : $(ResourceProvider)]: Generate go sdk mock test failed"
       az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
       az storage blob upload -c depthcoverage -f $(TASK_KEY).log -n log/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY).log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
       echo "##vso[task.setvariable variable=Task_Result]failure"
