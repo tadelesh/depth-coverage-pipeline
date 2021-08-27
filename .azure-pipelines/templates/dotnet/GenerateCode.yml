@@ -4,6 +4,9 @@ steps:
     bash ./scripts/bash/dotnet/installDotnet.sh 1>$(TASK_KEY).log 2>&1
   displayName: 'install .net'
 - bash: |
+    sudo npm install -g autorest@3.2.3
+  displayName: 'install autorest'
+- bash: |
     serviceType=$(SERVICE_TYPE)
     if [ "$serviceType" == "resource-manager" ]; then
       echo 'resource-manager'
