@@ -13,6 +13,8 @@ steps:
 #   condition: always()
 #   displayName: 'After $(TASK_KEY)'
 - bash: |
+    pwd
+    ls -l
     tar -czvf $(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY)-log.tar.gz *.log
     az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
     az storage blob upload -c depthcoverage -f $(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY)-log.tar.gz -n log/$(Build.BuildId)/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY)-log.tar.gz --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
@@ -24,7 +26,7 @@ steps:
     pwd
     ls -l
     ls -l /home/vsts/work
-    node /home/vsts/work/node_modules/publish-sdkcodgen-pipeline-result/dist/Logger/index.js --pipelineBuildId=$(Build.BuildId) --task=$(TASK_KEY) --status=completed --result=$(Task_Result) --logfile=$(TASK_KEY).log --pipelineLog=pipe.log
+    node /home/vsts/work/node_modules/publish-sdkcodgen-pipeline-result/dist/Logger/index.js --codegen=$(CodeGenerationName) --pipelineBuildId=$(Build.BuildId) --task=$(TASK_KEY) --status=completed --result=$(Task_Result) --logfile=$(TASK_KEY).log --pipelineLog=pipe.log
     az storage blob upload -c depthcoverage -f pipe.log -n log/$(Build.BuildId)/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY)-result.log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
 
     # publish result to cosmos db
