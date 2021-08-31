@@ -23,8 +23,9 @@ steps:
         dotnet new azuremgmt --provider $(ResourceProvider) --includeCI true --force
 
         # update the readme url
-        sed -i -e "s|require.*md|require:$(README_FILE_GITHUB_URL_WITH_COMMIT)|g" $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)/src/autorest.md
+        sed -i -e "s|require.*md|require: $(README_FILE_GITHUB_URL_WITH_COMMIT)|g" $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)/src/autorest.md
         cat $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)/src/autorest.md
+        echo "end of autorest.md"
       fi
     elif [ "$serviceType" == "data-plan" ]; then
       echo 'data-plan'
@@ -32,8 +33,7 @@ steps:
   displayName: 'Generate autorest.md'
 - bash: |
     cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)/src
-    # dotnet build /t:GenerateCode 1>>$(TASK_KEY).log 2>&1
-    dotnet build /t:GenerateCode
+    dotnet build /t:GenerateCode 1>>$(TASK_KEY).log 2>&1
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Generate code failed"
       # upload error log
