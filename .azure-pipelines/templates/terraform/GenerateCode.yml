@@ -104,7 +104,7 @@ steps:
 
     set -- "$@" --generate-extra-acctest=true --terraform-output-folder=$(Pipeline.Workspace)/s ./azure-rest-api-specs/$(README_FILE)
 
-    "$@" 1>$(TASK_KEY).log 2>&1
+    "$@" 1>$(Pipeline.Workspace)/s/$(TASK_KEY).log 2>&1
 
     # ls -l $(Pipeline.Workspace)/s/generated
 
@@ -112,7 +112,7 @@ steps:
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Generate code failed"
       # upload error log
       az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
-      az storage blob upload -c depthcoverage -f $(TASK_KEY).log -n log/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY).log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+      az storage blob upload -c depthcoverage -f $(Pipeline.Workspace)/s/$(TASK_KEY).log -n log/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY).log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
       echo "##vso[task.setvariable variable=Task_Result]failure"
       exit 1
     else

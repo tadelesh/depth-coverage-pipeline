@@ -72,20 +72,20 @@ steps:
     if [ "$sdktarget" == "clicore" ] || [ "$sdktarget" == "cli" ]; then
       echo "start to generate cli core code"
       codefolder="./azure-cli"
-      autorest --version=3.0.6271 --az --use=https://trenton.blob.core.windows.net/trenton/autorest-az-1.7.3.tgz ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli --target-mode=core --gen-cmdlet-test 1>$(TASK_KEY).log 2>&1
+      autorest --version=3.0.6271 --az --use=https://trenton.blob.core.windows.net/trenton/autorest-az-1.7.3.tgz ./azure-rest-api-specs/$(README_FILE) --azure-cli-folder=./azure-cli --target-mode=core --gen-cmdlet-test 1>$(Pipeline.Workspace)/s/$(TASK_KEY).log 2>&1
     fi
 
     if [ "$sdktarget" == "cliextension" ]; then
       echo "start to generate cli extension code"
       codefolder="./azure-cli-extensions"
-      autorest --version=3.0.6271 --az --use=https://trenton.blob.core.windows.net/trenton/autorest-az-1.7.3.tgz ./azure-rest-api-specs/$(README_FILE) --azure-cli-extension-folder=./azure-cli-extensions --gen-cmdlet-test 1>$(TASK_KEY).log 2>&1
+      autorest --version=3.0.6271 --az --use=https://trenton.blob.core.windows.net/trenton/autorest-az-1.7.3.tgz ./azure-rest-api-specs/$(README_FILE) --azure-cli-extension-folder=./azure-cli-extensions --gen-cmdlet-test 1>$(Pipeline.Workspace)/s/$(TASK_KEY).log 2>&1
     fi
 
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Generate code failed"
       # upload error log
       az login --service-principal -u $(SERVICE_PRINCIPE_ID) -p $(SERVICE_PRINCIPE_SECRET) --tenant $(SERVICE_PRINCIPE_TENANT)
-      az storage blob upload -c depthcoverage -f $(TASK_KEY).log -n log/$(TARGET)-$(ResourceProvider)-$(Build.BuildId)-$(TASK_KEY).log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
+      az storage blob upload -c depthcoverage -f $(Pipeline.Workspace)/s/$(TASK_KEY).log -n log/$(TARGET)-$(ResourceProvider)-$(Build.BuildId)-$(TASK_KEY).log --subscription $(SERVICE_PRINCIPE_SUBSCRIPTION) --account-name=depthcoverage
       echo "##vso[task.setvariable variable=Task_Result]failure"
       exit 1
     else
