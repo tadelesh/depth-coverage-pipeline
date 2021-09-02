@@ -1,0 +1,24 @@
+{
+  "serviceType": "resource-manager",
+  "resources": [],
+  "resourcelist": "",
+  "onboardType": "ad-hoc",
+  "swaggerRepo": {
+    "type": "github",
+    "path": "https://github.com/sdkautomationpipelinebot/azure-rest-api-specs",
+    "branch": "main"
+  },
+  "sdkRepo": {
+    "type": "github",
+    "path": "https://github.com/sdkautomationpipelinebot/azure-cli-extensions",
+    "branch": "main"
+  },
+  "codegenRepo": {
+    "type": "github",
+    "path": "https://github.com/Azure/depth-coverage-pipeline",
+    "branch": "dev"
+  },
+  "jsonFileList": [],
+  "readmeFile": "/specification/undefined/resource-manager/readme.md",
+  "target": "cliextension"
+}
