@@ -1,10 +1,10 @@
 steps:
 - template: GenerateCodePR.yml
 - bash: |
-    logurl="https://depthcoverage.blob.core.windows.net/depthcoverage/log/$(TARGET)-$(ResourceProvider)-$(Build.BuildId)-$(TASK_KEY).log"
+    logurl="https://depthcoverage.blob.core.windows.net/depthcoverage/log/$(CodeGenerationName)-$(Build.BuildId)-$(TASK_KEY).log"
     codePR=$(CODE_PULLREQUEST)
     triggerPR="https://github.com/${PIPELINE_ORG}/depth-coverage-pipeline/pull/$(System.PullRequest.PullRequestNumber)"
-    # resolveURL="http://$(CodegenApp_Server)/DepthCoverage/Resolve"
+    # resolveURL="https://$(CodegenApp_Server)/DepthCoverage/Resolve"
     sdktarget=$(TARGET)
     org=""
     repo=""
@@ -36,11 +36,11 @@ steps:
     fi
 
     onboardtype=$(OnboardType)
-    baseAPI="codegenerate"
+    baseAPI="codegenerations"
     if [ "$onboardtype" == "depth" ]; then
       baseAPI="depthCoverage"
     fi
-    resolveURL="http://$(CodegenApp_Server)/$baseAPI/resourceProvider/$(ResourceProvider)/sdk/$sdk/customize?triggerPR=$triggerPR&codePR=$codePR&org=$org"
+    resolveURL="https://$(CodegenApp_Server)/$baseAPI/resourceProvider/$(ResourceProvider)/sdk/$sdk/customize?triggerPR=$triggerPR&codePR=$codePR&org=$org"
         
     python scripts/issueResolve.py "Onboarding" "Please Reolve issues when Onboard '$(ResourceProvider)'" "$logurl" "$codePR" "$triggerPR" "$resolveURL" > scripts/email.html
     # cat scripts/email.html
