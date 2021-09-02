@@ -1,0 +1,188 @@
+{
+  "serviceType": "resource-manager",
+  "resources": [
+    {
+      "APIVersion": "2020-05-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/applicationGateways/privateEndpointConnections",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2020-06-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/customIpPrefixes",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2020-06-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/dscpConfigurations",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2018-02-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/expressRouteCrossConnections/peerings",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2019-06-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/firewallPolicies/ruleGroups",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2017-08-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/loadBalancers/inboundNatRules",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2018-08-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/networkInterfaces/tapConfigurations",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2019-12-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/networkVirtualAppliances",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2020-05-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/networkVirtualAppliances/virtualApplianceSites",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2019-04-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/privateLinkServices/privateEndpointConnections",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2017-03-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/routeFilters/routeFilterRules",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2021-02-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/virtualNetworkGateways/natRules",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2018-08-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/virtualNetworkTaps",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2019-07-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/virtualRouters",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2019-11-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/virtualRouters/peerings",
+      "tag": "package-2021-02-preview"
+    },
+    {
+      "APIVersion": "2020-08-01",
+      "operations": [],
+      "Resource": "Microsoft.Network/vpnGateways/natRules",
+      "tag": "package-2021-02-preview"
+    }
+  ],
+  "resourcelist": "Microsoft.Network/applicationGateways/privateEndpointConnections,Microsoft.Network/customIpPrefixes,Microsoft.Network/dscpConfigurations,Microsoft.Network/expressRouteCrossConnections/peerings,Microsoft.Network/firewallPolicies/ruleGroups,Microsoft.Network/loadBalancers/inboundNatRules,Microsoft.Network/networkInterfaces/tapConfigurations,Microsoft.Network/networkVirtualAppliances,Microsoft.Network/networkVirtualAppliances/virtualApplianceSites,Microsoft.Network/privateLinkServices/privateEndpointConnections,Microsoft.Network/routeFilters/routeFilterRules,Microsoft.Network/virtualNetworkGateways/natRules,Microsoft.Network/virtualNetworkTaps,Microsoft.Network/virtualRouters,Microsoft.Network/virtualRouters/peerings,Microsoft.Network/vpnGateways/natRules",
+  "onboardType": "depth",
+  "swaggerRepo": {
+    "type": "github",
+    "path": "https://github.com/chunyu3/azure-rest-api-specs",
+    "branch": "main"
+  },
+  "sdkRepo": {
+    "type": "github",
+    "path": "https://github.com/chunyu3/terraform-provider-azurerm",
+    "branch": "pipeline"
+  },
+  "codegenRepo": {
+    "type": "github",
+    "path": "https://github.com/Azure/depth-coverage-pipeline",
+    "branch": "dev"
+  },
+  "jsonFileList": [
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2020-05-01/applicationGateway.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2020-06-01/customIpPrefix.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2020-06-01/dscpConfiguration.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2018-02-01/expressRouteCrossConnection.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2019-06-01/firewallPolicy.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2017-08-01/loadBalancer.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2018-08-01/networkInterface.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2019-12-01/networkVirtualAppliance.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2020-05-01/networkVirtualAppliance.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2019-04-01/privateLinkService.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2017-03-01/routeFilter.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2021-02-01/virtualNetworkGateway.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2018-08-01/virtualNetworkTap.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2019-07-01/virtualRouter.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2019-11-01/virtualRouter.json",
+      "ops": ""
+    },
+    {
+      "jsonfile": "/specification/network/resource-manager/Microsoft.Network/stable/2020-08-01/virtualWan.json",
+      "ops": ""
+    }
+  ],
+  "RPName": "network",
+  "readmeFile": "/specification/network/resource-manager/readme.md",
+  "target": "terraform",
+  "tag": "package-2021-02-preview"
+}
