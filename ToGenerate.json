@@ -1,0 +1,354 @@
+{
+  "serviceType": "resource-manager",
+  "resources": [
+    {
+      "APIVersion": "2021-04-01",
+      "operations": [
+        {
+          "OperationId": "CapacityReservationGroups_ListBySubscription",
+          "version": "2021-04-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-04-01/compute.json"
+        },
+        {
+          "OperationId": "CapacityReservationGroups_ListByResourceGroup",
+          "version": "2021-04-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-04-01/compute.json"
+        },
+        {
+          "OperationId": "CapacityReservationGroups_Get",
+          "version": "2021-04-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-04-01/compute.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/capacityReservationGroups"
+    },
+    {
+      "APIVersion": "2021-03-01",
+      "operations": [
+        {
+          "OperationId": "RestorePointCollections_ListAll",
+          "version": "2021-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json"
+        },
+        {
+          "OperationId": "RestorePointCollections_List",
+          "version": "2021-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json"
+        },
+        {
+          "OperationId": "RestorePointCollections_Delete",
+          "version": "2021-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json"
+        },
+        {
+          "OperationId": "RestorePointCollections_Get",
+          "version": "2021-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json"
+        },
+        {
+          "OperationId": "RestorePointCollections_CreateOrUpdate",
+          "version": "2021-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/restorePointCollections"
+    },
+    {
+      "APIVersion": "2021-04-01",
+      "operations": [
+        {
+          "OperationId": "CapacityReservations_ListByCapacityReservationGroup",
+          "version": "2021-04-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-04-01/compute.json"
+        },
+        {
+          "OperationId": "CapacityReservations_Get",
+          "version": "2021-04-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-04-01/compute.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/capacityReservationGroups/capacityReservations"
+    },
+    {
+      "APIVersion": "2020-09-30",
+      "operations": [
+        {
+          "OperationId": "DiskAccesses_ListPrivateEndpointConnections",
+          "version": "2020-09-30",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-09-30/disk.json"
+        },
+        {
+          "OperationId": "DiskAccesses_DeleteAPrivateEndpointConnection",
+          "version": "2020-09-30",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-09-30/disk.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/diskAccesses/privateEndpointConnections"
+    },
+    {
+      "APIVersion": "2020-05-01",
+      "operations": [
+        {
+          "OperationId": "DiskAccesses_GetPrivateLinkResources",
+          "version": "2020-05-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-05-01/disk.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/diskAccesses/privateLinkResources"
+    },
+    {
+      "APIVersion": "2021-03-01",
+      "operations": [
+        {
+          "OperationId": "RestorePoints_Delete",
+          "version": "2021-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json"
+        },
+        {
+          "OperationId": "RestorePoints_Get",
+          "version": "2021-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json"
+        },
+        {
+          "OperationId": "RestorePoints_Create",
+          "version": "2021-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/restorePointCollections/restorePoints"
+    },
+    {
+      "APIVersion": "2020-09-30",
+      "operations": [
+        {
+          "OperationId": "DiskRestorePoint_Get",
+          "version": "2020-09-30",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-09-30/disk.json"
+        },
+        {
+          "OperationId": "DiskRestorePoint_GrantAccess",
+          "version": "2020-12-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-12-01/disk.json"
+        },
+        {
+          "OperationId": "DiskRestorePoint_RevokeAccess",
+          "version": "2020-12-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-12-01/disk.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/restorePointCollections/restorePoints/diskRestorePoints"
+    },
+    {
+      "APIVersion": "2018-06-01",
+      "operations": [
+        {
+          "OperationId": "VirtualMachines_Reimage",
+          "version": "2018-06-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2018-06-01/compute.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/virtualMachines"
+    },
+    {
+      "APIVersion": "2020-12-01",
+      "operations": [
+        {
+          "OperationId": "VirtualMachineScaleSets_ConvertToSinglePlacementGroup",
+          "version": "2020-12-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-12-01/compute.json"
+        },
+        {
+          "OperationId": "VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk",
+          "version": "2018-10-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2018-10-01/compute.json"
+        },
+        {
+          "OperationId": "VirtualMachineScaleSets_Redeploy",
+          "version": "2019-12-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-12-01/compute.json"
+        },
+        {
+          "OperationId": "VirtualMachineScaleSets_ReimageAll",
+          "version": "2018-10-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2018-10-01/compute.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/virtualMachineScaleSets"
+    },
+    {
+      "APIVersion": "2019-07-01",
+      "operations": [
+        {
+          "OperationId": "VirtualMachineScaleSetVMExtensions_List",
+          "version": "2019-07-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-07-01/compute.json"
+        },
+        {
+          "OperationId": "VirtualMachineScaleSetVMExtensions_Get",
+          "version": "2019-07-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-07-01/compute.json"
+        },
+        {
+          "OperationId": "VirtualMachineScaleSetVMExtensions_CreateOrUpdate",
+          "version": "2019-07-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-07-01/compute.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/extensions"
+    },
+    {
+      "APIVersion": "2019-12-01",
+      "operations": [
+        {
+          "OperationId": "VirtualMachineScaleSetVMs_PerformMaintenance",
+          "version": "2019-12-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-12-01/compute.json"
+        },
+        {
+          "OperationId": "VirtualMachineScaleSetVMs_Redeploy",
+          "version": "2019-03-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-03-01/compute.json"
+        },
+        {
+          "OperationId": "VirtualMachineScaleSetVMs_ReimageAll",
+          "version": "2018-04-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2018-04-01/compute.json"
+        },
+        {
+          "OperationId": "VirtualMachineScaleSetVMs_RetrieveBootDiagnosticsData",
+          "version": "2020-06-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-06-01/compute.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/virtualMachineScaleSets/virtualmachines"
+    },
+    {
+      "APIVersion": "2020-12-01",
+      "operations": [
+        {
+          "OperationId": "VirtualMachineScaleSetVMRunCommands_List",
+          "version": "2020-12-01",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-12-01/runCommands.json"
+        }
+      ],
+      "Resource": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/runCommands"
+    },
+    {
+      "APIVersion": "2016-09-30",
+      "operations": [
+        {
+          "OperationId": "ContainerServices_CreateOrUpdate",
+          "version": "2016-09-30",
+          "jsonFilePath": "/specification/compute/resource-manager/Microsoft.ContainerService/stable/2016-09-30/containerService.json"
+        }
+      ],
+      "Resource": "Microsoft.ContainerService/containerServices"
+    }
+  ],
+  "resourcelist": "Microsoft.Compute/capacityReservationGroups,Microsoft.Compute/restorePointCollections,Microsoft.Compute/capacityReservationGroups/capacityReservations,Microsoft.Compute/diskAccesses/privateEndpointConnections,Microsoft.Compute/diskAccesses/privateLinkResources,Microsoft.Compute/restorePointCollections/restorePoints,Microsoft.Compute/restorePointCollections/restorePoints/diskRestorePoints,Microsoft.Compute/virtualMachines,Microsoft.Compute/virtualMachineScaleSets,Microsoft.Compute/virtualMachineScaleSets/virtualMachines/extensions,Microsoft.Compute/virtualMachineScaleSets/virtualmachines,Microsoft.Compute/virtualMachineScaleSets/virtualMachines/runCommands,Microsoft.ContainerService/containerServices",
+  "onboardType": "depth",
+  "swaggerRepo": {
+    "type": "github",
+    "path": "https://github.com/chunyu3/azure-rest-api-specs",
+    "branch": "main"
+  },
+  "sdkRepo": {
+    "type": "github",
+    "path": "https://github.com/chunyu3/azure-cli",
+    "branch": "dev"
+  },
+  "codegenRepo": {
+    "type": "github",
+    "path": "https://github.com/Azure/depth-coverage-pipeline",
+    "branch": "dev"
+  },
+  "jsonFileList": [
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-04-01/compute.json",
+      "ops": "CapacityReservationGroups_ListBySubscription,RestorePointCollections_ListAll,CapacityReservationGroups_ListByResourceGroup,CapacityReservationGroups_Get,CapacityReservations_ListByCapacityReservationGroup,CapacityReservations_Get,RestorePointCollections_List,RestorePointCollections_Delete,RestorePointCollections_Get,RestorePoints_Get,RestorePoints_Create,VirtualMachines_Reimage,VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk,VirtualMachineScaleSets_ReimageAll,VirtualMachineScaleSetVMs_PerformMaintenance,VirtualMachineScaleSetVMs_RetrieveBootDiagnosticsData"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-07-01/compute.json",
+      "ops": "CapacityReservationGroups_ListBySubscription,RestorePointCollections_ListAll,CapacityReservationGroups_ListByResourceGroup,CapacityReservationGroups_Get,CapacityReservations_Get,RestorePointCollections_List,RestorePointCollections_Delete,RestorePointCollections_Get,RestorePointCollections_CreateOrUpdate,RestorePoints_Delete,RestorePoints_Get,RestorePoints_Create,VirtualMachineScaleSetVMs_Redeploy"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/compute.json",
+      "ops": "RestorePointCollections_ListAll,RestorePointCollections_List,RestorePointCollections_Delete,RestorePointCollections_Get,RestorePointCollections_CreateOrUpdate,RestorePoints_Delete,RestorePoints_Get,RestorePoints_Create,VirtualMachines_Reimage,VirtualMachineScaleSets_ConvertToSinglePlacementGroup,VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk,VirtualMachineScaleSets_Redeploy,VirtualMachineScaleSets_ReimageAll,VirtualMachineScaleSetVMs_Redeploy,VirtualMachineScaleSetVMs_RetrieveBootDiagnosticsData"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-09-30/disk.json",
+      "ops": "DiskAccesses_ListPrivateEndpointConnections,DiskAccesses_DeleteAPrivateEndpointConnection,DiskRestorePoint_Get"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-12-01/disk.json",
+      "ops": "DiskAccesses_ListPrivateEndpointConnections,DiskAccesses_GetPrivateLinkResources,DiskRestorePoint_Get,DiskRestorePoint_GrantAccess,DiskRestorePoint_RevokeAccess"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-05-01/disk.json",
+      "ops": "DiskAccesses_GetPrivateLinkResources"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-06-30/disk.json",
+      "ops": "DiskAccesses_GetPrivateLinkResources"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2018-06-01/compute.json",
+      "ops": "VirtualMachines_Reimage"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-07-01/compute.json",
+      "ops": "VirtualMachines_Reimage,VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk,VirtualMachineScaleSets_ReimageAll,VirtualMachineScaleSetVMExtensions_List,VirtualMachineScaleSetVMExtensions_Get,VirtualMachineScaleSetVMExtensions_CreateOrUpdate,VirtualMachineScaleSetVMs_Redeploy"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-12-01/compute.json",
+      "ops": "VirtualMachines_Reimage,VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk,VirtualMachineScaleSets_Redeploy,VirtualMachineScaleSets_ReimageAll,VirtualMachineScaleSetVMExtensions_Get,VirtualMachineScaleSetVMs_PerformMaintenance"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-06-01/compute.json",
+      "ops": "VirtualMachines_Reimage,VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk,VirtualMachineScaleSets_Redeploy,VirtualMachineScaleSets_ReimageAll,VirtualMachineScaleSetVMExtensions_List,VirtualMachineScaleSetVMExtensions_Get,VirtualMachineScaleSetVMExtensions_CreateOrUpdate,VirtualMachineScaleSetVMs_Redeploy,VirtualMachineScaleSetVMs_RetrieveBootDiagnosticsData"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-12-01/compute.json",
+      "ops": "VirtualMachines_Reimage,VirtualMachineScaleSets_ConvertToSinglePlacementGroup,VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk,VirtualMachineScaleSets_Redeploy,VirtualMachineScaleSets_ReimageAll,VirtualMachineScaleSetVMExtensions_List,VirtualMachineScaleSetVMs_Redeploy,VirtualMachineScaleSetVMs_RetrieveBootDiagnosticsData"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2018-10-01/compute.json",
+      "ops": "VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk,VirtualMachineScaleSets_ReimageAll"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2019-03-01/compute.json",
+      "ops": "VirtualMachineScaleSets_ForceRecoveryServiceFabricPlatformUpdateDomainWalk,VirtualMachineScaleSets_ReimageAll,VirtualMachineScaleSetVMs_Redeploy"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2018-04-01/compute.json",
+      "ops": "VirtualMachineScaleSetVMs_ReimageAll"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2020-12-01/runCommands.json",
+      "ops": "VirtualMachineScaleSetVMRunCommands_List"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-03-01/runCommands.json",
+      "ops": "VirtualMachineScaleSetVMRunCommands_List"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-04-01/runCommands.json",
+      "ops": "VirtualMachineScaleSetVMRunCommands_List"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.Compute/stable/2021-07-01/runCommands.json",
+      "ops": "VirtualMachineScaleSetVMRunCommands_List"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.ContainerService/stable/2016-09-30/containerService.json",
+      "ops": "ContainerServices_CreateOrUpdate"
+    },
+    {
+      "jsonfile": "/specification/compute/resource-manager/Microsoft.ContainerService/stable/2017-01-31/containerService.json",
+      "ops": "ContainerServices_CreateOrUpdate"
+    }
+  ],
+  "RPName": "compute",
+  "readmeFile": "/specification/compute/resource-manager/readme.md",
+  "target": "clicore"
+}
