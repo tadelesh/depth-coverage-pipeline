@@ -1,0 +1,25 @@
+{
+  "serviceType": "resource-manager",
+  "resources": [],
+  "resourcelist": "",
+  "onboardType": "CI",
+  "swaggerRepo": {
+    "branch": "main",
+    "type": "github",
+    "path": "https://github.com/tadelesh/azure-rest-api-specs"
+  },
+  "sdkRepo": {
+    "branch": "main",
+    "type": "github",
+    "path": "https://github.com/tadelesh/azure-sdk-for-go"
+  },
+  "codegenRepo": {
+    "branch": "dev",
+    "type": "github",
+    "path": "https://github.com/Azure/depth-coverage-pipeline"
+  },
+  "jsonFileList": [],
+  "RPName": "apimanagement",
+  "readmeFile": "/specification/apimanagement/resource-manager/readme.md",
+  "target": "go"
+}
