@@ -7,6 +7,7 @@ steps:
     sudo npm install -g autorest@3.2.3
   displayName: 'install autorest'
 - bash: |
+    set -x
     serviceType=$(SERVICE_TYPE)
     if [ "$serviceType" == "resource-manager" ]; then
       echo 'resource-manager'
@@ -16,15 +17,17 @@ steps:
         cp "$SchemaFILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json
       else
         echo 'generate template'
+        captizeRP=$(ResourceProvider)
+        captizeRP=`echo ${captizeRP:0:1} | tr  '[a-z]' '[A-Z]'`${captizeRP:1}
         cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)
         dotnet new -i $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/eng/templates/Azure.ResourceManager.Template
-        mkdir -p $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)
-        cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)
-        dotnet new azuremgmt --provider $(ResourceProvider) --includeCI true --force
+        mkdir -p $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$captizeRP
+        cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$captizeRP
+        dotnet new azuremgmt --provider $captizeRP --includeCI true --force
 
         # update the readme url
-        sed -i -e "s|require.*md|require: $(README_FILE_GITHUB_URL_WITH_COMMIT)|g" $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)/src/autorest.md
-        cat $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)/src/autorest.md
+        sed -i -e "s|require.*md|require: $(README_FILE_GITHUB_URL_WITH_COMMIT)|g" $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$captizeRP/src/autorest.md
+        cat $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$captizeRP/src/autorest.md
         echo "end of autorest.md"
       fi
     elif [ "$serviceType" == "data-plan" ]; then
