@@ -14,9 +14,8 @@ steps:
     if [ "$serviceType" == "resource-manager" ]; then
       echo 'resource-manager'
       projectFolder=$(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$captizeRP
-      if [ -f "$projectFolder" ]; then
+      if [ -d "$projectFolder" ]; then
         echo "$projectFolder exists."
-        cp "$SchemaFILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json
       else
         echo 'generate template'
         cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)
