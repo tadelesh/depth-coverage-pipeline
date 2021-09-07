@@ -8,13 +8,14 @@ steps:
   displayName: 'install autorest'
 - bash: |
     set -x
+    captizeRP=$(ResourceProvider)
+    captizeRP=`echo ${captizeRP:0:1} | tr  '[a-z]' '[A-Z]'`${captizeRP:1}
     serviceType=$(SERVICE_TYPE)
     if [ "$serviceType" == "resource-manager" ]; then
       echo 'resource-manager'
-      projectFolder=$(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)
-      if [ -f "$projectFolder" ]; then
+      projectFolder=$(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$captizeRP
+      if [ -d "$projectFolder" ]; then
         echo "$projectFolder exists."
-        cp "$SchemaFILE" $(Pipeline.Workspace)/s/azure-rest-api-specs/specification/$(ResourceProvider)/resource-manager/schema.json
       else
         echo 'generate template'
         captizeRP=$(ResourceProvider)
@@ -35,7 +36,9 @@ steps:
     fi
   displayName: 'Generate autorest.md'
 - bash: |
-    cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$(ResourceProvider)/src
+    captizeRP=$(ResourceProvider)
+    captizeRP=`echo ${captizeRP:0:1} | tr  '[a-z]' '[A-Z]'`${captizeRP:1}
+    cd $(Pipeline.Workspace)/s/$(SDK_REPO_NAME)/sdk/$(ResourceProvider)/Azure.ResourceManager.$captizeRP/src
     dotnet build /t:GenerateCode >>$(Pipeline.Workspace)/s/$(TASK_KEY).log 2>&1
     if [ "$?" != "0" ]; then
       echo -e "\e[31m[$(date -u)] ERROR: [$(ResourceProvider)]: Generate code failed"
