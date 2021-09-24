@@ -1,0 +1,25 @@
+{
+  "serviceType": "resource-manager",
+  "resources": [],
+  "resourcelist": "",
+  "onboardType": "CI",
+  "swaggerRepo": {
+    "type": "github",
+    "path": "https://github.com/tadelesh/azure-rest-api-specs",
+    "branch": "go_track2_test"
+  },
+  "sdkRepo": {
+    "type": "github",
+    "path": "https://github.com/tadelesh/azure-sdk-for-go",
+    "branch": "main"
+  },
+  "codegenRepo": {
+    "type": "github",
+    "path": "https://github.com/tadelesh/depth-coverage-pipeline",
+    "branch": "go_pipeline"
+  },
+  "jsonFileList": [],
+  "RPName": "postgresql",
+  "readmeFile": "/specification/postgresql/resource-manager/readme.md",
+  "target": "go"
+}
